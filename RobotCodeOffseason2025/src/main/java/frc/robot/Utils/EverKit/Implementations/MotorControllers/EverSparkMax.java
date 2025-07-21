@@ -129,4 +129,9 @@ public class EverSparkMax extends EverMotorController{
     private void applyConfig(){
         m_controller.configure(m_config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
+
+    @Override
+    public boolean isConnected(){
+        return m_controller.getMotorTemperature() > 0;
+    }
 }

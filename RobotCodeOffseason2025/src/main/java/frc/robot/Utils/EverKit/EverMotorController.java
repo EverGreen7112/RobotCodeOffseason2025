@@ -58,5 +58,8 @@ public abstract class EverMotorController {
      * @return the original instance of the motor controller
      */
     public abstract Object getControllerInstance();
+
+
+    public abstract boolean isConnected();
     
 }
