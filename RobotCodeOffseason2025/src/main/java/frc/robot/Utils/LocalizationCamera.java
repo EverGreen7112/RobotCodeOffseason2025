@@ -91,7 +91,7 @@ public class LocalizationCamera {
  
      
      public Matrix<N3, N1> getEstimationStdDevs() {
-         return m_curStdDevs;
+        return m_curStdDevs;
      }
  
      public boolean isConnected(){
