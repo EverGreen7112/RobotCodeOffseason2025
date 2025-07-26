@@ -23,7 +23,7 @@ public class Swerve extends SubsystemBase implements SwerveConsts{
     private AHRS m_gyro;
 
     private Vector2d m_velocity;
-    private double m_angularVelocity;
+    private double m_angularVelocity, m_offset = 0; // offset for the gyro angle, used to align the robot with the field
     private boolean m_isGyroOriented;
 
     private Swerve() {
@@ -79,7 +79,11 @@ public class Swerve extends SubsystemBase implements SwerveConsts{
     }
 
     public double getGyroOrientedAngle(){
-        return m_gyro.getYaw() * SwerveConsts.GYRO_DIRECTION;
+        return (m_gyro.getYaw() + m_offset) * SwerveConsts.GYRO_DIRECTION;
+    }
+
+    public void setGyroOffset(double offset){
+        m_offset = offset;
     }
 
     public SwerveModule[] getModules(){

@@ -74,6 +74,7 @@ public class Vision extends SubsystemBase {
     private Consumer<Double> m_rotatiConsumer = rotation -> {
         m_gyroAbs += (m_gyroAbs + Swerve.m_instance.getGyroOrientedAngle()) / 2; // Average the gyro readings to smooth out the estimation
         m_estRotation = ((m_estimatedPose.getRotation().getDegrees() - m_gyroAbs) + rotation) / 2 ; // Average the last rotations to smooth out the estimation
+        Swerve.getInstance().setGyroOffset(m_gyroAbs); 
     }; 
 
     private Vision() {
