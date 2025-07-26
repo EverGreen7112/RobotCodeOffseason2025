@@ -117,4 +117,9 @@ public class EverTalonFX extends EverMotorController{
         return m_posConversionFactor;
     }
 
+    @Override
+    public boolean isConnected() {
+        return m_controller.isConnected();
+    }
+
 }
