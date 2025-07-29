@@ -9,12 +9,15 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Utils.GamePieceCamera.GamePieceType;
+
 import frc.robot.Utils.Math.Funcs;
 
 public class GamePieceDetector {
-    private static final double CORAL_RADIUS = 1;
-    private static final GamePieceCamera[] M_CAMS = {};
+    private static final double CORAL_RADIUS = 0.114;
+    private static final GamePieceCamera[] M_CAMS = {
+        new GamePieceCamera("left_cam", GamePieceType.Coral, new Translation3d(0,0 , 0), 58,640,360)};
     private static GamePieceDetector m_instance = new GamePieceDetector();
 
     public GamePieceDetector() {

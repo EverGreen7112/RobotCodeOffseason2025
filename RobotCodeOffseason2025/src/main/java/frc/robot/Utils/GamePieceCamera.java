@@ -4,25 +4,52 @@ import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonPipelineResult;
 
 import edu.wpi.first.math.geometry.Translation3d;
+import frc.robot.Utils.Math.Funcs;
 
 public class GamePieceCamera {
     public enum GamePieceType{
         Algea,
         Coral
     }
+    private double m_frameWidth, m_frameHieght;
+    private double m_focalLenghtX, m_focalLenghtY;
     private PhotonCamera m_cam;
     private GamePieceType m_gamePieceType;
     private Translation3d m_robotToCam;
-    public GamePieceCamera(String camName,GamePieceType gamePieceType,Translation3d robotToCam){
+    public GamePieceCamera(String camName,GamePieceType gamePieceType,Translation3d robotToCam,
+                           double focalLenghtX, double focalLenghtY, double frameWitdh, double frameHieght){
         m_cam = new PhotonCamera(camName);
         m_gamePieceType = gamePieceType;
         m_robotToCam = robotToCam;
+        m_focalLenghtX = focalLenghtX;
+        m_focalLenghtY = focalLenghtY;
+        m_frameHieght = frameHieght;
+        m_frameWidth = frameWitdh;
     }
+
+    public GamePieceCamera(String camName,GamePieceType gamePieceType,Translation3d robotToCam,
+                           double diagFOV, double frameWitdh, double frameHieght){
+        double[] FovArr = Funcs.diagFovToHorizontalAndVertialFov(diagFOV);
+        
+        double focalX = Funcs.FovToFocalLenght(FovArr[0], frameWitdh);
+        double focalY = Funcs.FovToFocalLenght(FovArr[1], frameHieght);
+        
+        m_cam = new PhotonCamera(camName);
+        m_gamePieceType = gamePieceType;
+        m_robotToCam = robotToCam;
+        m_focalLenghtX = focalX;
+        m_focalLenghtY = focalY;
+        m_frameHieght = frameHieght;
+        m_frameWidth = frameWitdh;
+    }
+
+
 
     public PhotonPipelineResult getGamePieces(){
         PhotonPipelineResult lastestResult = m_cam.getLatestResult();
-        if(!lastestResult.hasTargets())
+        if(!lastestResult.hasTargets()) {
             return null;
+        }
         return lastestResult;
     }
 
@@ -32,5 +59,21 @@ public class GamePieceCamera {
 
     public Translation3d getRobotToCam(){
         return m_robotToCam;
+    }
+
+    public double getFocalX(){
+        return m_focalLenghtX;
+    }
+
+    public double getFocalY(){
+        return m_focalLenghtY;
+    }
+
+    public double getWidth(){
+        return m_frameWidth;
+    }
+
+    public double getHieght(){
+        return m_frameHieght;
     }
 }

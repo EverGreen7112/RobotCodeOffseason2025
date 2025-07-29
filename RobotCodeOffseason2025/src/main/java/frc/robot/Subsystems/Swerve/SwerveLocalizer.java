@@ -24,15 +24,15 @@ public class SwerveLocalizer implements Periodic, SwerveConsts {
 
     private static final LocalizationCamera[] CAMS = {
             new LocalizationCamera("left_cam",
-                    AprilTagFieldLayout.loadField(AprilTagFields.k2025Reefscape),
+                    AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeAndyMark),
                     new Transform3d(new Translation3d(0.115, 0.055, 0.32), new Rotation3d(0, 0 ,0)),
                     VecBuilder.fill(0.0, 0.0, 0), VecBuilder.fill(0.0, 0.0, 0)),
             new LocalizationCamera("right_cam",
-                                        AprilTagFieldLayout.loadField(AprilTagFields.k2025Reefscape),
+                                        AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeAndyMark),
                                         new Transform3d(0.115, -0.155, 0.32, new Rotation3d(0, 0, 0)),
                                         VecBuilder.fill(0, 0, 0), VecBuilder.fill(0, 0, 0)),
             new LocalizationCamera("back_cam",
-                                        AprilTagFieldLayout.loadField(AprilTagFields.k2025Reefscape),
+                                        AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeAndyMark),
                                         new Transform3d(-0.27985, -0.295, 0.56, new Rotation3d(Math.toRadians(-1), Math.toRadians(-44), Math.toRadians(180))), //new Rotation3d(Math.toRadians(25), Math.toRadians(1.4), Math.toRadians(180))
                                         VecBuilder.fill(0, 0, 0), VecBuilder.fill(0, 0, 0))
     };
@@ -49,7 +49,7 @@ public class SwerveLocalizer implements Periodic, SwerveConsts {
 
     private SwerveLocalizer() {
         m_cams = new ArrayList<>(Arrays.asList(CAMS));
-        m_fieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2025Reefscape);
+        m_fieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeAndyMark);
 
         SwerveDriveKinematics kinematics = new SwerveDriveKinematics(
                 new Translation2d(modulesPositions[0].x, modulesPositions[0].y),

@@ -114,5 +114,19 @@ public class Funcs {
         center[1] = y;
         return center;
     }
+    /**
+     * 
+     * @return hFOV index 0 vFOV index 1 - 16:9 ratio
+     */
+    public static double[] diagFovToHorizontalAndVertialFov(double diagFOV){
+        double[] FovArr = new double[2];
+        FovArr[0] = 2 * Math.atan2(Math.tan(Math.toRadians(diagFOV / 2)) * 16,Math.sqrt(Math.pow(16, 2) + Math.pow(9, 2)));
+        FovArr[1] = 2 * Math.atan2(Math.tan(FovArr[0] / 2) * 9, 16);
+        return FovArr;
+    }
+
+    public static double FovToFocalLenght(double fov, double pxLenght){
+        return pxLenght / ( 2 * Math.tan(fov / 2));
+    }
 
 }
