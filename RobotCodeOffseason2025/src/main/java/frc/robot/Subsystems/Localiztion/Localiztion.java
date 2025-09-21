@@ -3,6 +3,7 @@ package frc.robot.Subsystems.Localiztion;
 import com.studica.frc.AHRS.NavXComType;
 
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Subsystems.Swerve.Swerve;
@@ -36,8 +37,8 @@ public class Localiztion extends SubsystemBase {
 
     @Override
     public void periodic() {
-        m_odometry.periodic();
-        m_vision.periodic();
+        m_odometry.getRelativePosition();
+        m_vision.getEstimatedPose();
     }
 
 

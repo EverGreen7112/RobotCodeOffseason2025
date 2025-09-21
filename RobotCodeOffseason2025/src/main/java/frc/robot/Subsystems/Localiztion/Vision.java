@@ -42,10 +42,10 @@ public class Vision extends SubsystemBase {
                                         AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeAndyMark),
                                         new Transform3d(0.115, -0.155, 0.32, new Rotation3d(0, 0, 0)),
                                         VecBuilder.fill(0, 0, 0), VecBuilder.fill(0, 0, 0)),
-            new LocalizationCamera("back_cam",
+            /*new LocalizationCamera("back_cam",
                                         AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeAndyMark),
                                         new Transform3d(-0.27985, -0.295, 0.56, new Rotation3d(Math.toRadians(-1), Math.toRadians(-44), Math.toRadians(180))), //new Rotation3d(Math.toRadians(25), Math.toRadians(1.4), Math.toRadians(180))
-                                        VecBuilder.fill(0, 0, 0), VecBuilder.fill(0, 0, 0))
+                                        VecBuilder.fill(0, 0, 0), VecBuilder.fill(0, 0, 0))*/
     };
 
     private static final double FIELD_WIDTH = 8.05;
@@ -103,6 +103,8 @@ public class Vision extends SubsystemBase {
             m_abdPostionConsumer.accept(cam);
         }
         m_rotatiConsumer.accept(m_estRotation);
+        SmartDashboard.putNumber("x", 1);
+        SmartDashboard.putNumber("y", m_estimatedPose.getY());
     }
 
     

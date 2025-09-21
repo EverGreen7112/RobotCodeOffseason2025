@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.Subsystems.Localiztion.Localiztion;
 import frc.robot.Utils.EverKit.Periodic;
 import frc.robot.Utils.EverKit.Implementations.MotorControllers.EverTalonFX;
 import frc.robot.Utils.EverKit.Implementations.PIDControllers.EverExternalMotorPIDController;
@@ -30,7 +31,7 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
 
-  private static Field2d m_field;
+  private static Field2d m_field = new Field2d();
 
   @Override
   public void robotInit() {
@@ -47,8 +48,8 @@ public class Robot extends TimedRobot {
       } catch (Exception e) {
         e.printStackTrace();
       }
-    
-    
+      m_field.setRobotPose(Localiztion.getPoseEstimator().getEstimatedPosition());
+      SmartDashboard.putData("field", m_field);
     }
   } 
 

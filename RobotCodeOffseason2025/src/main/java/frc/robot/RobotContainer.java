@@ -7,7 +7,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.Commands.Swerve.ManualDrive.TeleopDriveCommand;
+import frc.robot.Commends.TeleopDriveCommand;
 import frc.robot.Subsystems.Swerve.Swerve;
 
 public class RobotContainer {

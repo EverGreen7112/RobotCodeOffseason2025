@@ -202,14 +202,14 @@ public class Swerve extends SubsystemBase implements SwerveConsts{
     }
 
     private void log(){
-        // SmartDashboard.putNumber("TL", m_modules[0].getAngle());
-        // SmartDashboard.putNumber("TR", m_modules[1].getAngle());
-        // SmartDashboard.putNumber("DL", m_modules[2].getAngle());
-        // SmartDashboard.putNumber("DR", m_modules[3].getAngle());
+        SmartDashboard.putNumber("TL", m_modules[0].getAngle());
+        SmartDashboard.putNumber("TR", m_modules[1].getAngle());
+        SmartDashboard.putNumber("DR", m_modules[3].getAngle());
+        SmartDashboard.putNumber("DL", m_modules[2].getAngle());
 
         SmartDashboard.putString("velocity", getRobotOrientedVelocity().toString());
-        SmartDashboard.putNumber("angular velocity", getAngularVelocity());
         SmartDashboard.putNumber("gyro angle", m_gyro.getYaw());
+        SmartDashboard.putNumber("angular velocity", getAngularVelocity());
        
 
 

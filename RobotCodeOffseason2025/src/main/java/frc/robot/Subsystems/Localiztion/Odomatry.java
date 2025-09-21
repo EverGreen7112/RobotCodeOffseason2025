@@ -3,6 +3,7 @@ package frc.robot.Subsystems.Localiztion;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Subsystems.Swerve.Swerve;
 import frc.robot.Utils.Math.Vector2d;
@@ -43,8 +44,10 @@ public class Odomatry extends SubsystemBase {
         m_deltaTime = DeltaTime.getDeltaTime(); // Get the time since the last update
         Vector2d current = Swerve.getInstance().getGyroOrientedVelocity();
         m_relativePosition = m_relativePosition.add(current.mul(m_deltaTime)); // not using that shit but nice to have 🤷‍♂️
+        
 
         Localiztion.getPoseEstimator().update(Swerve.getInstance().getGyroRotation2d(),Swerve.getInstance().getModulesPositions());
+
     }
 
 }
