@@ -1,15 +1,8 @@
 package frc.robot.Subsystems.Localiztion;
 
-import java.security.Timestamp;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Optional;
-import java.util.function.Consumer;
 
 import org.photonvision.EstimatedRobotPose;
-import org.photonvision.PhotonPoseEstimator;
-import org.photonvision.PhotonPoseEstimator.PoseStrategy;
-import org.w3c.dom.views.DocumentView;
 
 import com.studica.frc.AHRS.NavXComType;
 
@@ -18,21 +11,38 @@ import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
-import edu.wpi.first.units.measure.Time;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Subsystems.Swerve.Swerve;
+import frc.robot.Subsystems.Swerve.SwerveConsts;
 import frc.robot.Utils.LocalizationCamera;
 import frc.robot.Utils.EverKit.EverGyro;
+import frc.robot.Utils.EverKit.Periodic;
 import frc.robot.Utils.EverKit.Implementations.Gyros.EverNavX;
-import frc.robot.Utils.Math.Vector2d;
 
-public class Vision extends SubsystemBase {
+public class Localization implements Periodic {
+    
 
-    private static Vision m_instance;
+    private static Localization m_instance;
+    private Field2d m_field = new Field2d();
+
+    private SwerveDrivePoseEstimator m_poseEstimator;
+    
+    private AprilTagFieldLayout m_fieldLayout;
+    private static final double FIELD_WIDTH = 8.05;
+    private static final double FIELD_HEIGHT = 17.55;
+    private static final double MAX_ESTIMATION_HEIGHT = 0.08;
+    private static final double MAX_DISTANCE_FROM_TAG = 3;
+
+
     private static final LocalizationCamera[] CAMS = {
             new LocalizationCamera("left_cam",
                     AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeAndyMark),
@@ -48,69 +58,63 @@ public class Vision extends SubsystemBase {
                                         VecBuilder.fill(0, 0, 0), VecBuilder.fill(0, 0, 0))*/
     };
 
-    private static final double FIELD_WIDTH = 8.05;
-    private static final double FIELD_HEIGHT = 17.55;
-    private static final double MAX_ESTIMATION_HEIGHT = 0.08;
-    private static final double MAX_DISTANCE_FROM_TAG = 3;
 
-    private double m_estRotation = 0.0, m_gyroAbs = 0.0; // Rotation estimation from the vision system, and gyro to abduction angle offset
-    private AprilTagFieldLayout m_fieldLayout;
-    private ArrayList<LocalizationCamera> m_cams;
-    private Pose2d m_estimatedPose = new Pose2d();
-    private double m_timeStamp = 0.0; // Timestamp of the last pose estimation
+    private Localization() {
 
-    private Consumer<LocalizationCamera> m_abdPostionConsumer = cam -> {
-        Optional<EstimatedRobotPose> est = cam.getEstimatedGlobalPose();
-        if (!takeVisionPoseEstimation(est)) {
-            return;
+        Pose2d startingPose = new Pose2d(0 ,0, new Rotation2d());
+        Translation2d pos[] = new Translation2d[4];
+        for(int i = 0; i < 4; i++){
+            pos[i] = new Translation2d(SwerveConsts.modulesPositions[i].x,SwerveConsts.modulesPositions[i].y);
         }
-        m_estimatedPose = est.get().estimatedPose.toPose2d();
-        m_timeStamp = est.get().timestampSeconds;
-        Localiztion.getPoseEstimator().addVisionMeasurement(m_estimatedPose, m_timeStamp, cam.getEstimationStdDevs());
-        
-    };
-    
-    
-    private Consumer<Double> m_rotatiConsumer = rotation -> {
-        m_gyroAbs += (m_gyroAbs + Swerve.m_instance.getGyroOrientedAngle()) / 2; // Average the gyro readings to smooth out the estimation
-        m_estRotation = ((m_estimatedPose.getRotation().getDegrees() - m_gyroAbs) + rotation) / 2 ; // Average the last rotations to smooth out the estimation
-        Swerve.getInstance().setGyroOffset(m_gyroAbs); 
-    }; 
+        SwerveDriveKinematics kinematics = new SwerveDriveKinematics(pos);
+        m_poseEstimator = new SwerveDrivePoseEstimator(kinematics, Swerve.getInstance().getGyroRotation2d(), Swerve.getInstance().getModulesPositions(),startingPose);
 
-    private Vision() {
-        m_cams = new ArrayList<>(Arrays.asList(CAMS));
-        m_fieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeAndyMark);
+        SmartDashboard.putData("field", m_field);
+
+
+        start(PeriodicTime.kRobotPeriodic);
     }
 
-    public static Vision getInstance() {
+    public static Localization getInstance() {
         if (m_instance == null) {
-            m_instance = new Vision();
+            m_instance = new Localization();
         }
         return m_instance;
     }
 
-    public Pose2d getEstimatedPose() {
-        return m_estimatedPose;
+    public SwerveDrivePoseEstimator getPoseEstimator() {
+        return m_instance.m_poseEstimator;
     }
-
-    public double getEstimatedRotation() {
-        return m_estRotation;
-    }   
 
     @Override
     public void periodic() {
-        for (LocalizationCamera cam : m_cams) {
-            m_abdPostionConsumer.accept(cam);
+        m_poseEstimator.update(Swerve.getInstance().getGyroRotation2d(), Swerve.getInstance().getModulesPositions());
+
+        for(LocalizationCamera cam : CAMS){
+            addCameraVision(cam);
+            
         }
-        m_rotatiConsumer.accept(m_estRotation);
-        SmartDashboard.putNumber("x", 1);
-        SmartDashboard.putNumber("y", m_estimatedPose.getY());
+
+        m_field.setRobotPose(m_poseEstimator.getEstimatedPosition());
+
+        log();
     }
 
-    
+    public void addCameraVision(LocalizationCamera cam) {
+        Optional<EstimatedRobotPose> est = cam.getEstimatedGlobalPose();
+        if (!takeVisionPoseEstimation(est))
+            return;
+        m_poseEstimator.addVisionMeasurement(est.get().estimatedPose.toPose2d(), est.get().timestampSeconds,
+                cam.getEstimationStdDevs());
+    }
+
     private boolean takeVisionPoseEstimation(Optional<EstimatedRobotPose> est) {
-        if (!est.isPresent() || est == null)
+        SmartDashboard.putBoolean("test", true);
+        if (!est.isPresent() || est == null){
+            SmartDashboard.putBoolean("nigger", false);
             return false;
+        }
+        SmartDashboard.putBoolean("nigger", true);
 
         Pose2d estPos = est.get().estimatedPose.toPose2d();
         double x = estPos.getX();
@@ -126,7 +130,7 @@ public class Vision extends SubsystemBase {
 
         // Precalculation - see how many tags we found, and calculate an
         // average-distance metric
-        for (var tgt : est.get().targetsUsed) {
+        /*for (var tgt : est.get().targetsUsed) {
             var tagPose = m_fieldLayout.getTagPose(tgt.getFiducialId());
             if (tagPose.isEmpty())
                 continue;
@@ -137,10 +141,25 @@ public class Vision extends SubsystemBase {
                     .getTranslation()
                     .getDistance(est.get().estimatedPose.toPose2d().getTranslation());
         }
-        avgDist /= numTags;
+        ***** THERE IS A PROBLEM WITH THE FOR LOOP WHERE FOR SOME REASON THE CODE DOES NOT GO BEYOND IT 
+              UNLESS YOU FULLY ISABLE IT*****            
+        */
 
         boolean isTooFar = avgDist > MAX_DISTANCE_FROM_TAG;
+        SmartDashboard.putBoolean("OUT OF FIELD", outOfField);
+        SmartDashboard.putBoolean("ABOVE CAMERA", aboveCamera);
+        SmartDashboard.putBoolean("UNDERGROUND", underGround);
+        SmartDashboard.putBoolean("IS TOO FAR", isTooFar);
+
         return !outOfField && !aboveCamera && !underGround && !isTooFar;
     }
-    
+
+    private void log(){
+        
+        SmartDashboard.putNumber("Pose X", m_poseEstimator.getEstimatedPosition().getX());
+        SmartDashboard.putNumber("Pose Y", m_poseEstimator.getEstimatedPosition().getY());
+        SmartDashboard.putNumber("Pose Rotation", m_poseEstimator.getEstimatedPosition().getRotation().getDegrees());
+
+    }
+
 }

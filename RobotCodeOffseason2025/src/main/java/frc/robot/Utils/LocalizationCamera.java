@@ -30,7 +30,6 @@ public class LocalizationCamera {
         
          m_singleTagStdDevs = singleTagStdDevs;
          m_multiTagStdDevs = multiTagStdDevs;
-         
      }
  
      public Optional<EstimatedRobotPose> getEstimatedGlobalPose() {

@@ -9,13 +9,14 @@ import java.util.ArrayList;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.Subsystems.Localiztion.Localiztion;
+import frc.robot.Subsystems.Localiztion.Localization;
 import frc.robot.Utils.EverKit.Periodic;
 import frc.robot.Utils.EverKit.Implementations.MotorControllers.EverTalonFX;
 import frc.robot.Utils.EverKit.Implementations.PIDControllers.EverExternalMotorPIDController;
@@ -30,12 +31,14 @@ public class Robot extends TimedRobot {
 
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
+  private Localization m_Localizer = Localization.getInstance();
 
-  private static Field2d m_field = new Field2d();
+
 
   @Override
   public void robotInit() {
     m_robotContainer = new RobotContainer();
+    
   }
 
   @Override
@@ -48,8 +51,6 @@ public class Robot extends TimedRobot {
       } catch (Exception e) {
         e.printStackTrace();
       }
-      m_field.setRobotPose(Localiztion.getPoseEstimator().getEstimatedPosition());
-      SmartDashboard.putData("field", m_field);
     }
   } 
 
