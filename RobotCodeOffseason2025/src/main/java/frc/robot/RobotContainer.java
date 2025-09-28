@@ -7,8 +7,20 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.Commends.TeleopDriveCommand;
-import frc.robot.Subsystems.Localiztion.Localization;
+//import frc.robot.Commands.Climber.CloseClimberCommand;
+//import frc.robot.Commands.Climber.OpenClimberCommand;
+//import frc.robot.Commands.Dispenser.AlgeaDispense;
+//import frc.robot.Commands.Dispenser.DispenseCoralCommand;
+//import frc.robot.Commands.Dispenser.SlowDispenseCommand;
+//import frc.robot.Commands.Elevator.MoveElevatorManually;
+//import frc.robot.Commands.Elevator.MoveElevatorTo;
+//import frc.robot.Commands.Elevator.MoveElevatorToSelectedLevel;
+import frc.robot.Commands.Swerve.AutoDrive.DriveToClosestBranchCommand;
+import frc.robot.Commands.Swerve.AutoDrive.DriveToSelectedPoseCommand;
+import frc.robot.Commands.Swerve.ManualDrive.ChangeTeleopSpeedModeCommand;
+import frc.robot.Commands.Swerve.ManualDrive.TeleopDriveCommand;
+import frc.robot.Commands.Swerve.ManualDrive.ChangeTeleopSpeedModeCommand.SpeedMode;
+//import frc.robot.Subsystems.Elevator.Elevator.ElevatorLevel;
 import frc.robot.Subsystems.Swerve.Swerve;
 
 public class RobotContainer {
@@ -45,7 +57,32 @@ public class RobotContainer {
 
     //chassis
     Swerve.getInstance().setDefaultCommand(teleopCommand);
+    chassisRB.whileTrue(new DriveToClosestBranchCommand(true));                                                                                        
+    chassisLB.whileTrue(new DriveToClosestBranchCommand(false));
 
+    chassisRT.whileTrue(new ChangeTeleopSpeedModeCommand(SpeedMode.kTurbo));
+    chassisLT.whileTrue(new ChangeTeleopSpeedModeCommand(SpeedMode.kSlow));
+    
+    //elevator
+    //chassisA.whileTrue( new MoveElevatorTo(ElevatorLevel.CLOSED));
+    //chassisY.onTrue( new MoveElevatorToSelectedLevel());
+    //chassisStart.whileTrue( new MoveElevatorManually());
+
+    //climber
+    //chassisPovDown.whileTrue(new OpenClimberCommand());
+    //chassisPovUp.whileTrue(new CloseClimberCommand());
+  
+    //dispenser
+    //chassisX.whileTrue(new DispenseCoralCommand());
+    //chassisPovLeft.whileTrue(new AlgeaDispense());
+
+
+    chassisBack.onTrue(new InstantCommand(()->{Swerve.getInstance().resetGyro();}));
+    //chassisPovRight.whileTrue(new SlowDispenseCommand());
+    chassisB.whileTrue(new DriveToSelectedPoseCommand());
+
+    
+    
   }
 
   

@@ -1,4 +1,4 @@
-package frc.robot.Subsystems.Localiztion;
+package frc.robot.Subsystems.Swerve;
 
 import java.util.Optional;
 
@@ -21,8 +21,6 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Subsystems.Swerve.Swerve;
-import frc.robot.Subsystems.Swerve.SwerveConsts;
 import frc.robot.Utils.LocalizationCamera;
 import frc.robot.Utils.EverKit.EverGyro;
 import frc.robot.Utils.EverKit.Periodic;
@@ -30,13 +28,12 @@ import frc.robot.Utils.EverKit.Implementations.Gyros.EverNavX;
 
 public class Localization implements Periodic {
     
-
     private static Localization m_instance;
     private Field2d m_field = new Field2d();
 
     private SwerveDrivePoseEstimator m_poseEstimator;
     
-    private AprilTagFieldLayout m_fieldLayout;
+    private AprilTagFieldLayout m_fieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeAndyMark) ;
     private static final double FIELD_WIDTH = 8.05;
     private static final double FIELD_HEIGHT = 17.55;
     private static final double MAX_ESTIMATION_HEIGHT = 0.08;
@@ -64,7 +61,7 @@ public class Localization implements Periodic {
         Pose2d startingPose = new Pose2d(0 ,0, new Rotation2d());
         Translation2d pos[] = new Translation2d[4];
         for(int i = 0; i < 4; i++){
-            pos[i] = new Translation2d(SwerveConsts.modulesPositions[i].x,SwerveConsts.modulesPositions[i].y);
+            pos[i] = new Translation2d(SwerveConsts.modulesPositions[i].x, SwerveConsts.modulesPositions[i].y);
         }
         SwerveDriveKinematics kinematics = new SwerveDriveKinematics(pos);
         m_poseEstimator = new SwerveDrivePoseEstimator(kinematics, Swerve.getInstance().getGyroRotation2d(), Swerve.getInstance().getModulesPositions(),startingPose);
@@ -109,12 +106,9 @@ public class Localization implements Periodic {
     }
 
     private boolean takeVisionPoseEstimation(Optional<EstimatedRobotPose> est) {
-        SmartDashboard.putBoolean("test", true);
         if (!est.isPresent() || est == null){
-            SmartDashboard.putBoolean("nigger", false);
             return false;
         }
-        SmartDashboard.putBoolean("nigger", true);
 
         Pose2d estPos = est.get().estimatedPose.toPose2d();
         double x = estPos.getX();
@@ -130,7 +124,7 @@ public class Localization implements Periodic {
 
         // Precalculation - see how many tags we found, and calculate an
         // average-distance metric
-        /*for (var tgt : est.get().targetsUsed) {
+        for (var tgt : est.get().targetsUsed) {
             var tagPose = m_fieldLayout.getTagPose(tgt.getFiducialId());
             if (tagPose.isEmpty())
                 continue;
@@ -141,15 +135,21 @@ public class Localization implements Periodic {
                     .getTranslation()
                     .getDistance(est.get().estimatedPose.toPose2d().getTranslation());
         }
-        ***** THERE IS A PROBLEM WITH THE FOR LOOP WHERE FOR SOME REASON THE CODE DOES NOT GO BEYOND IT 
+        /***** THERE IS A PROBLEM WITH THE FOR LOOP WHERE FOR SOME REASON THE CODE DOES NOT GO BEYOND IT 
               UNLESS YOU FULLY ISABLE IT*****            
         */
+        avgDist /= numTags;
 
         boolean isTooFar = avgDist > MAX_DISTANCE_FROM_TAG;
         SmartDashboard.putBoolean("OUT OF FIELD", outOfField);
         SmartDashboard.putBoolean("ABOVE CAMERA", aboveCamera);
         SmartDashboard.putBoolean("UNDERGROUND", underGround);
         SmartDashboard.putBoolean("IS TOO FAR", isTooFar);
+        SmartDashboard.putNumber("x", x);
+        SmartDashboard.putNumber("y", y);
+        SmartDashboard.putNumber("z", z);
+
+
 
         return !outOfField && !aboveCamera && !underGround && !isTooFar;
     }
@@ -160,6 +160,21 @@ public class Localization implements Periodic {
         SmartDashboard.putNumber("Pose Y", m_poseEstimator.getEstimatedPosition().getY());
         SmartDashboard.putNumber("Pose Rotation", m_poseEstimator.getEstimatedPosition().getRotation().getDegrees());
 
+    }
+
+    public double getFieldOrientedAngle() {
+        return m_poseEstimator.getEstimatedPosition().getRotation().getDegrees();
+    }
+
+    public Pose2d getCurrentPoint() {
+        return m_poseEstimator.getEstimatedPosition();
+    }
+
+    public void setCurrentPoint(Pose2d newPoint) {
+        m_poseEstimator.resetPosition(
+                Swerve.getInstance().getGyroRotation2d(),
+                Swerve.getInstance().getModulesPositions(),
+                newPoint);
     }
 
 }
