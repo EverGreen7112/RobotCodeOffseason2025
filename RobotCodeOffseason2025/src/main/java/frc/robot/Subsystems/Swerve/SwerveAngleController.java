@@ -2,6 +2,7 @@ package frc.robot.Subsystems.Swerve;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Utils.EverKit.Periodic;
 
 public class SwerveAngleController implements Periodic{
@@ -15,6 +16,7 @@ public class SwerveAngleController implements Periodic{
         m_angleController = new ProfiledPIDController(2, 0, 0, new Constraints(180, 180));
         m_angleController.enableContinuousInput(-180, 180);
         m_isFieldOriented = false;   
+        start(PeriodicTime.kTeleopPeriodic);
     }
 
     public static SwerveAngleController getInstance(){
@@ -22,23 +24,21 @@ public class SwerveAngleController implements Periodic{
     }
 
     public void start(double targetAngle){
-        stop();
         m_targetAngle = targetAngle;
         m_isFieldOriented = false;
         m_angleController.reset(Swerve.getInstance().getGyroOrientedAngle());
     }
 
     public void start(double targetAngle, boolean isFieldOriented){
-        stop();
         m_targetAngle = targetAngle;
         m_isFieldOriented = isFieldOriented;
         m_angleController.reset( (m_isFieldOriented) ? Localization.getInstance().getFieldOrientedAngle() : Swerve.getInstance().getGyroOrientedAngle());
-
     }
 
     @Override
     public void periodic() {
         double currentAngle = (m_isFieldOriented ) ? Localization.getInstance().getFieldOrientedAngle() : Swerve.getInstance().getGyroOrientedAngle();
+        SmartDashboard.putNumber("currentAngle", currentAngle);
         Swerve.getInstance().driveByAngularVelocity( m_angleController.calculate(currentAngle, m_targetAngle));    
     }
 

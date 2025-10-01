@@ -29,7 +29,6 @@ import frc.robot.Utils.EverKit.Implementations.Gyros.EverNavX;
 public class Localization implements Periodic {
     
     private static Localization m_instance;
-    private Field2d m_field = new Field2d();
 
     private SwerveDrivePoseEstimator m_poseEstimator;
     
@@ -66,9 +65,6 @@ public class Localization implements Periodic {
         SwerveDriveKinematics kinematics = new SwerveDriveKinematics(pos);
         m_poseEstimator = new SwerveDrivePoseEstimator(kinematics, Swerve.getInstance().getGyroRotation2d(), Swerve.getInstance().getModulesPositions(),startingPose);
 
-        SmartDashboard.putData("field", m_field);
-
-
         start(PeriodicTime.kRobotPeriodic);
     }
 
@@ -91,9 +87,6 @@ public class Localization implements Periodic {
             addCameraVision(cam);
             
         }
-
-        m_field.setRobotPose(m_poseEstimator.getEstimatedPosition());
-
         log();
     }
 
@@ -135,9 +128,6 @@ public class Localization implements Periodic {
                     .getTranslation()
                     .getDistance(est.get().estimatedPose.toPose2d().getTranslation());
         }
-        /***** THERE IS A PROBLEM WITH THE FOR LOOP WHERE FOR SOME REASON THE CODE DOES NOT GO BEYOND IT 
-              UNLESS YOU FULLY ISABLE IT*****            
-        */
         avgDist /= numTags;
 
         boolean isTooFar = avgDist > MAX_DISTANCE_FROM_TAG;

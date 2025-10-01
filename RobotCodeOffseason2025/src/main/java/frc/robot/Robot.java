@@ -33,14 +33,17 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
   private Localization m_Localizer = Localization.getInstance();
+  private Field2d m_field = new Field2d();
+
 
 
 
   @Override
   public void robotInit() {
     m_robotContainer = new RobotContainer();
-    
     SwerveAutoController.getInstance().addChoosersToDashboard();
+    SmartDashboard.putData("Field", m_field);
+
   }
 
   @Override
@@ -54,6 +57,9 @@ public class Robot extends TimedRobot {
         e.printStackTrace();
       }
     }
+
+    m_field.setRobotPose(Localization.getInstance().getCurrentPoint());
+
   } 
 
   @Override

@@ -7,6 +7,8 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Commands.Climber.CloseClimberCommand;
+import frc.robot.Commands.Climber.OpenClimberCommand;
 //import frc.robot.Commands.Climber.CloseClimberCommand;
 //import frc.robot.Commands.Climber.OpenClimberCommand;
 //import frc.robot.Commands.Dispenser.AlgeaDispense;
@@ -17,7 +19,10 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 //import frc.robot.Commands.Elevator.MoveElevatorToSelectedLevel;
 import frc.robot.Commands.Swerve.AutoDrive.DriveToClosestBranchCommand;
 import frc.robot.Commands.Swerve.AutoDrive.DriveToSelectedPoseCommand;
+import frc.robot.Commands.Swerve.AutoDrive.RotateToFeederCommand;
 import frc.robot.Commands.Swerve.ManualDrive.ChangeTeleopSpeedModeCommand;
+import frc.robot.Commands.Swerve.ManualDrive.LockSwerveAngleCommand;
+import frc.robot.Commands.Swerve.ManualDrive.RotateToCommand;
 import frc.robot.Commands.Swerve.ManualDrive.TeleopDriveCommand;
 import frc.robot.Commands.Swerve.ManualDrive.ChangeTeleopSpeedModeCommand.SpeedMode;
 //import frc.robot.Subsystems.Elevator.Elevator.ElevatorLevel;
@@ -69,8 +74,8 @@ public class RobotContainer {
     //chassisStart.whileTrue( new MoveElevatorManually());
 
     //climber
-    //chassisPovDown.whileTrue(new OpenClimberCommand());
-    //chassisPovUp.whileTrue(new CloseClimberCommand());
+    chassisPovDown.whileTrue(new OpenClimberCommand()); 
+    chassisPovUp.whileTrue(new CloseClimberCommand());
   
     //dispenser
     //chassisX.whileTrue(new DispenseCoralCommand());
@@ -80,6 +85,8 @@ public class RobotContainer {
     chassisBack.onTrue(new InstantCommand(()->{Swerve.getInstance().resetGyro();}));
     //chassisPovRight.whileTrue(new SlowDispenseCommand());
     chassisB.whileTrue(new DriveToSelectedPoseCommand());
+    chassisPovLeft.whileTrue(new RotateToCommand(90, false));
+    chassisPovRight.whileTrue(new RotateToCommand(180, false));
 
     
     
