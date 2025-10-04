@@ -15,7 +15,7 @@ import frc.robot.Subsystems.Dispenser.Dispenser;
 import frc.robot.Subsystems.Elevator.Elevator;
 import frc.robot.Subsystems.Swerve.Swerve;
 import frc.robot.Subsystems.Swerve.SwerveAutoController;
-import frc.robot.Subsystems.Swerve.SwerveLocalizer;
+import frc.robot.Subsystems.Swerve.Localization;
 import frc.robot.Utils.RobotOperatorController;
 import frc.robot.Utils.EverKit.Periodic;
 
@@ -96,52 +96,51 @@ public class LedStrip implements Periodic {
         
         
         // //error leds    
-        //  if(!DriverStation.isEnabled()){
-        //     if(!Swerve.getInstance().areMotorControllersConnected() ){
-        //         setLedPattern(LedPattern.ERROR_SWERVE);
-        //     }
-        //     else if(!Swerve.getInstance().areAbsEncodersConnected() ){
-        //         setLedPattern(LedPattern.ERROR_SWERVE_CANCODERS);
-        //     }
-        //     else if(!Swerve.getInstance().isGyroConnected() ){
-        //         setLedPattern(LedPattern.ERROR_GYRO);
-        //     }
-        //     else if(!Elevator.getInstance().areMotorControllersConnected() ){
-        //         setLedPattern(LedPattern.ERROR_ELEVATOR);
-        //     }
-        //     else if(!Dispenser.getInstance().areMotorControllersConnected()){
-        //         setLedPattern(LedPattern.ERROR_DISPENSER);
-        //     }
-        //     else if(!Climber.getInstance().areMotorControllersConnected()){
-        //         setLedPattern(LedPattern.ERROR_CLIMBER);
-        //     }
-        //     else if(!SwerveLocalizer.getInstance().areCamsConnected() ){
-        //         setLedPattern(LedPattern.ERROR_CAMS);
-        //     }
-        //     else{
-        //         setLedPattern(LedPattern.DEFAULT_COLOR);
-        //     }
-        //     m_turnClimberLedsOn = false;
-        // }
-       
-        // else if(Climber.getInstance().isCageLocked()){
-        //     m_turnClimberLedsOn = true;
-        // }
-        // else if(SwerveAutoController.isRobotAligning){
-        //     setLedPattern(LedPattern.ROBOT_ALIGNING);
-        // }
-        // else if(RobotOperatorController.getInstance().getLed()){
-        //     setLedPattern(LedPattern.READY_FOR_CORAL);
-        // }
-        // else if(Dispenser.getInstance().isAtEntry() || Dispenser.getInstance().isAtExit()){
-        //     setLedPattern(LedPattern.CORAL_IN_ROBOT);
-        // }
-        // else if(m_turnClimberLedsOn){
-        //     setLedPattern(LedPattern.CAGE_LOCKED);
-        // }
-        // else {
-        //     setLedPattern(LedPattern.DEFAULT_COLOR);
-        // }
+          if(!DriverStation.isEnabled()){
+             if(!Swerve.getInstance().areMotorControllersConnected() ){
+                 setLedPattern(LedPattern.ERROR_SWERVE);
+             }
+             else if(!Swerve.getInstance().areAbsEncodersConnected() ){
+                 setLedPattern(LedPattern.ERROR_SWERVE_CANCODERS);
+             }
+             else if(!Swerve.getInstance().isGyroConnected() ){
+                 setLedPattern(LedPattern.ERROR_GYRO);
+             }
+             else if(!Elevator.getInstance().areMotorControllersConnected() ){
+                 setLedPattern(LedPattern.ERROR_ELEVATOR);
+             }
+             else if(!Dispenser.getInstance().areMotorControllersConnected()){
+                 setLedPattern(LedPattern.ERROR_DISPENSER);
+             }
+             else if(!Climber.getInstance().areMotorControllersConnected()){
+                 setLedPattern(LedPattern.ERROR_CLIMBER);
+             }
+             /*else if(!Localization.getInstance().areCamsConnected() ){
+                 setLedPattern(LedPattern.ERROR_CAMS);*/
+             }
+             else{
+                 setLedPattern(LedPattern.DEFAULT_COLOR);
+             }
+             m_turnClimberLedsOn = false;
+        
+        if(Climber.getInstance().isCageLocked()){
+             m_turnClimberLedsOn = true;
+         }
+         else if(SwerveAutoController.isRobotAligning){
+             setLedPattern(LedPattern.ROBOT_ALIGNING);
+         }
+         else if(RobotOperatorController.getInstance().getLed()){
+             setLedPattern(LedPattern.READY_FOR_CORAL);
+         }
+         else if(Dispenser.getInstance().isAtEntry() || Dispenser.getInstance().isAtExit()){
+             setLedPattern(LedPattern.CORAL_IN_ROBOT);
+         }
+         else if(m_turnClimberLedsOn){
+             setLedPattern(LedPattern.CAGE_LOCKED);
+         }
+         else {
+             setLedPattern(LedPattern.DEFAULT_COLOR);
+         }
 
         //setLedPattern(LedPattern.CAGE_LOCKED);
 

@@ -1,5 +1,6 @@
 package frc.robot.Utils.EverKit.Implementations.MotorControllers;
 
+import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
@@ -62,6 +63,10 @@ public class EverTalonFX extends EverMotorController{
         return m_controller.getDeviceID();
     }
 
+    public double getVoltage(){
+        return m_controller.getMotorVoltage().getValueAsDouble();
+    }
+
     @Override
     public void setIdleMode(IdleMode idleMode) {
         switch (idleMode) {
@@ -103,6 +108,11 @@ public class EverTalonFX extends EverMotorController{
 
     public void setPosConversionFactor(double factor) {
         m_posConversionFactor = factor;
+    }
+
+    public void setMotionMagicConfig(MotionMagicConfigs config){
+        m_config.MotionMagic = config;
+        m_configurator.apply(config);
     }
 
     public void setVelConversionFactor(double factor) {

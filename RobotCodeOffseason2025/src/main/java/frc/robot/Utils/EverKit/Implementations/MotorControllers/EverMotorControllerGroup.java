@@ -97,5 +97,17 @@ public class EverMotorControllerGroup extends EverMotorController{
         }
         return true;
     }
+
+    @Override
+    public void setVoltage(double volt) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public double getVoltage() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
     
 }

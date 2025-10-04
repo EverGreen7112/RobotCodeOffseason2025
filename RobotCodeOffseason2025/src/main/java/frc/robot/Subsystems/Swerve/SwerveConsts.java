@@ -36,10 +36,10 @@ public interface SwerveConsts{
 
     // motor controllers
     public static final EverTalonFX 
-            TL_DRIVE_MOTOR = new EverTalonFX(18),
-            TR_DRIVE_MOTOR = new EverTalonFX(1), 
-            DL_DRIVE_MOTOR = new EverTalonFX(16),  
-            DR_DRIVE_MOTOR = new EverTalonFX(3); 
+            TL_DRIVE_MOTOR = new EverTalonFX(16),
+            TR_DRIVE_MOTOR = new EverTalonFX(20), 
+            DL_DRIVE_MOTOR = new EverTalonFX(5),  
+            DR_DRIVE_MOTOR = new EverTalonFX(12); 
     
     public static final EverSparkMax 
             TL_STEER_MOTOR = new EverSparkMax(11),
@@ -85,9 +85,9 @@ public interface SwerveConsts{
     // chassis encoders 
     public static final EverAbsEncoder
             TL_ABS_ENCODER = new EverCANCoder(1),
-            TR_ABS_ENCODER = new EverCANCoder(0),
+            TR_ABS_ENCODER = new EverCANCoder(21),
             DL_ABS_ENCODER = new EverCANCoder(3),
-            DR_ABS_ENCODER = new EverCANCoder(2);
+            DR_ABS_ENCODER = new EverCANCoder(4);
 
     public static final EverAbsEncoder[] ABS_ENCODERS = {TL_ABS_ENCODER, TR_ABS_ENCODER, DL_ABS_ENCODER, DR_ABS_ENCODER};
     

@@ -1,7 +1,11 @@
 package frc.robot.Subsystems.Elevator;
 
+import java.util.logging.Level;
+
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.hardware.core.CoreTalonFX;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
@@ -20,15 +24,15 @@ import frc.robot.Utils.EverKit.Implementations.PIDControllers.EverMotionMagicPID
 
 public class Elevator extends SubsystemBase {
 
-    private static final boolean DEBUG_MODE = false;
+    private static final boolean DEBUG_MODE = true;
     private final double ELEVATOR_TOLERANCE = 1;
 
     public enum ElevatorLevel{
-        CLOSED(3, 0.3),
+        CLOSED(0, 0.3),
         L1(7, 0.3),
-        L2(16.5, 0.3),
-        L3(34.2, 0.3),
-        L4(60.55,0.3); 
+        L2(9.3, 0.3),
+        L3(22, 0.3),
+        L4(39.5,0.3); 
 
         public final double height;
         public final double dispenseSpeed;
@@ -49,29 +53,28 @@ public class Elevator extends SubsystemBase {
 
     private DigitalInput m_bottomLS;
 
+    private final PositionVoltage positionControl = new PositionVoltage(0);
+
     private Elevator(){
         m_targetLevel = ElevatorLevel.CLOSED;
 
-        EverTalonFX leader = new EverTalonFX(14); // -> temp id
-        EverTalonFX follower = new EverTalonFX(0); // -> temp id
+        EverTalonFX leader = new EverTalonFX(18); // 
+        EverTalonFX follower = new EverTalonFX(19); 
         
         leader.getControllerInstance().setNeutralMode(NeutralModeValue.Brake);
-        leader.setIdleMode(IdleMode.kCoast);
         follower.getControllerInstance().setNeutralMode(NeutralModeValue.Brake);
-        follower.setIdleMode(IdleMode.kCoast);
+        leader.setInverted(true);
 
-        EverMotionMagicPIDController talonPidController = new EverMotionMagicPIDController(leader, 300, 120);
-        EverMotionMagicPIDController talonPidControllerleft = new EverMotionMagicPIDController(follower, 300, 120);
+        EverMotionMagicPIDController talonPidController = new EverMotionMagicPIDController(leader, 100, 150);
         Slot0Configs a = new Slot0Configs();
         a.kD = 0;
-        a.kG = 0.4;
+        a.kG = 0.39;
         a.kI = 0;
         a.kP = 3.2;
-        a.kV = 1/2.6;
+        a.kV = 0.14;
         a.kS = 0.2;
         a.GravityType = GravityTypeValue.Elevator_Static;
         talonPidController.setPID(a);
-        talonPidControllerleft.setPID(a);
 
         EverTalonFXInternalEncoder encoderR = new EverTalonFXInternalEncoder(leader);
         encoderR.setPosConversionFactor(1);
@@ -81,7 +84,7 @@ public class Elevator extends SubsystemBase {
         follower.getControllerInstance().setControl(new Follower(leader.getId(), false));
         
         
-        m_bottomLS = new DigitalInput(0);
+        m_bottomLS = new DigitalInput(4);
 
         m_motorRight = leader;
         m_motorLeft = follower;
@@ -116,7 +119,7 @@ public class Elevator extends SubsystemBase {
         return m_targetLevel;
     }
     public boolean cantGoDown(){
-        return false;
+        return (!m_bottomLS.get()) &&  isOpenAt(ElevatorLevel.CLOSED);
     }
 
     public boolean isOpenAt(ElevatorLevel level){
@@ -133,9 +136,12 @@ public class Elevator extends SubsystemBase {
         if(DEBUG_MODE)
             log();
 
-        if(cantGoDown() && m_motorRight.get() <= 0){
+        if(cantGoDown() && m_motorRight.get() <= 0 ){
             m_motorRight.stop();
             resetPose();
+        }
+        else if(isOpenAt(m_targetLevel)){
+            ((CoreTalonFX) m_motorRight.getControllerInstance()).setControl(positionControl.withPosition(m_targetLevel.height));
         }
     }
 

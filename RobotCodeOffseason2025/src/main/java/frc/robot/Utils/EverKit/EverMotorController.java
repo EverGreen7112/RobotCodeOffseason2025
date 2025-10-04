@@ -16,7 +16,9 @@ public abstract class EverMotorController {
     /**
      * set current speed(precentage (-1 - 1))
      */
-    public abstract void set(double value);   
+    public abstract void set(double value); 
+    
+    public abstract void setVoltage(double volt);
 
     /**
      * Invert directions of motor;
@@ -60,5 +62,8 @@ public abstract class EverMotorController {
     public abstract Object getControllerInstance();
 
     public abstract boolean isConnected(); // Check if the motor controller is connected
+
+
+    public abstract double getVoltage();
     
 }

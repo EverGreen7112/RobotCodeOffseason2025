@@ -22,13 +22,13 @@ public class Climber extends SubsystemBase{
     private AnalogInput m_distance;
     
     private Climber(){
-        EverTalonFX climbMotor = new EverTalonFX(12);
+        EverTalonFX climbMotor = new EverTalonFX(0);
         m_climbMotor = climbMotor;
 
         m_distance = new AnalogInput(2);
 
-        m_leftLS = new DigitalInput(4);
-        m_rightLS = new DigitalInput(3);
+        m_leftLS = new DigitalInput(0);
+        m_rightLS = new DigitalInput(2);
         EverTalonFXInternalEncoder encoder = new EverTalonFXInternalEncoder(climbMotor);
         encoder.setPosConversionFactor(1);
 
@@ -59,19 +59,19 @@ public class Climber extends SubsystemBase{
 
     public void close(){
         m_climbMotor.set(-CLIMB_SPEED);
-    }
+    } 
 
     public void stop(){
         m_climbMotor.stop();
     }
 
     public boolean cantOpen(){
-        return m_encoder.getPos() >= 185 || m_distance.getValue() >= 1800;//185;
+        return false;//m_encoder.getPos() >= 185 || m_distance.getValue() >= 1800;//185;
         
     }
 
     public boolean cantClose(){
-        return  m_distance.getValue() <= 800;//185;
+        return  false;//m_distance.getValue() <= 800;//185;
 
     }
 

@@ -168,5 +168,18 @@ public class EverSparkMax extends EverMotorController{
     @Override
     public boolean isConnected() {
         return m_controller.getMotorTemperature() > 0;
+ 
+    }
+
+    @Override
+    public void setVoltage(double volt) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public double getVoltage() {
+        // TODO Auto-generated method stub
+        return 0;
     }
 }

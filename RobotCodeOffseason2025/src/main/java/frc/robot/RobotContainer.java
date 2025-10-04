@@ -9,23 +9,18 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Commands.Climber.CloseClimberCommand;
 import frc.robot.Commands.Climber.OpenClimberCommand;
-//import frc.robot.Commands.Climber.CloseClimberCommand;
-//import frc.robot.Commands.Climber.OpenClimberCommand;
-//import frc.robot.Commands.Dispenser.AlgeaDispense;
-//import frc.robot.Commands.Dispenser.DispenseCoralCommand;
-//import frc.robot.Commands.Dispenser.SlowDispenseCommand;
+import frc.robot.Commands.Dispenser.AlgeaDispense;
+import frc.robot.Commands.Dispenser.DispenseCoralCommand;
+import frc.robot.Commands.Dispenser.SlowDispenseCommand;
 //import frc.robot.Commands.Elevator.MoveElevatorManually;
-//import frc.robot.Commands.Elevator.MoveElevatorTo;
-//import frc.robot.Commands.Elevator.MoveElevatorToSelectedLevel;
+import frc.robot.Commands.Elevator.MoveElevatorTo;
+import frc.robot.Commands.Elevator.MoveElevatorToSelectedLevel;
 import frc.robot.Commands.Swerve.AutoDrive.DriveToClosestBranchCommand;
 import frc.robot.Commands.Swerve.AutoDrive.DriveToSelectedPoseCommand;
-import frc.robot.Commands.Swerve.AutoDrive.RotateToFeederCommand;
 import frc.robot.Commands.Swerve.ManualDrive.ChangeTeleopSpeedModeCommand;
-import frc.robot.Commands.Swerve.ManualDrive.LockSwerveAngleCommand;
-import frc.robot.Commands.Swerve.ManualDrive.RotateToCommand;
 import frc.robot.Commands.Swerve.ManualDrive.TeleopDriveCommand;
 import frc.robot.Commands.Swerve.ManualDrive.ChangeTeleopSpeedModeCommand.SpeedMode;
-//import frc.robot.Subsystems.Elevator.Elevator.ElevatorLevel;
+import frc.robot.Subsystems.Elevator.Elevator.ElevatorLevel;
 import frc.robot.Subsystems.Swerve.Swerve;
 
 public class RobotContainer {
@@ -69,24 +64,23 @@ public class RobotContainer {
     chassisLT.whileTrue(new ChangeTeleopSpeedModeCommand(SpeedMode.kSlow));
     
     //elevator
-    //chassisA.whileTrue( new MoveElevatorTo(ElevatorLevel.CLOSED));
-    //chassisY.onTrue( new MoveElevatorToSelectedLevel());
+    chassisA.whileTrue( new MoveElevatorTo(ElevatorLevel.CLOSED));
+    chassisY.onTrue( new MoveElevatorTo(ElevatorLevel.L4));
     //chassisStart.whileTrue( new MoveElevatorManually());
 
+
     //climber
-    chassisPovDown.whileTrue(new OpenClimberCommand()); 
+    chassisPovDown.whileTrue(new OpenClimberCommand());
     chassisPovUp.whileTrue(new CloseClimberCommand());
   
     //dispenser
-    //chassisX.whileTrue(new DispenseCoralCommand());
-    //chassisPovLeft.whileTrue(new AlgeaDispense());
+    chassisX.whileTrue(new DispenseCoralCommand());
+    chassisPovLeft.whileTrue(new AlgeaDispense());
 
 
     chassisBack.onTrue(new InstantCommand(()->{Swerve.getInstance().resetGyro();}));
-    //chassisPovRight.whileTrue(new SlowDispenseCommand());
+    chassisPovRight.whileTrue(new SlowDispenseCommand());
     chassisB.whileTrue(new DriveToSelectedPoseCommand());
-    chassisPovLeft.whileTrue(new RotateToCommand(90, false));
-    chassisPovRight.whileTrue(new RotateToCommand(180, false));
 
     
     

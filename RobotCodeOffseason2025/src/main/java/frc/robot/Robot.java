@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.Subsystems.LedStrip;
 import frc.robot.Subsystems.Swerve.Localization;
 import frc.robot.Subsystems.Swerve.SwerveAutoController;
 import frc.robot.Utils.EverKit.Periodic;
@@ -43,7 +44,7 @@ public class Robot extends TimedRobot {
     m_robotContainer = new RobotContainer();
     SwerveAutoController.getInstance().addChoosersToDashboard();
     SmartDashboard.putData("Field", m_field);
-
+    LedStrip.getInstance().initialize();
   }
 
   @Override
@@ -59,6 +60,8 @@ public class Robot extends TimedRobot {
     }
 
     m_field.setRobotPose(Localization.getInstance().getCurrentPoint());
+
+    LedStrip.getInstance().periodic();
 
   } 
 

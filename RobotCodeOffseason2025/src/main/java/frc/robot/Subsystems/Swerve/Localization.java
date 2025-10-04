@@ -68,6 +68,7 @@ public class Localization implements Periodic {
         start(PeriodicTime.kRobotPeriodic);
     }
 
+    
     public static Localization getInstance() {
         if (m_instance == null) {
             m_instance = new Localization();
