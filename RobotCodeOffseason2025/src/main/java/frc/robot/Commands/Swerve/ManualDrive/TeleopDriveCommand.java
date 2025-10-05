@@ -50,7 +50,7 @@ public class TeleopDriveCommand extends Command{
         speedX = Funcs.roundAfterDecimalPoint(speedX, 2);
         speedY = Funcs.roundAfterDecimalPoint(speedY, 2);
         //create drive vector
-        Vector2d vec = new Vector2d(-speedX * maxSpeed, speedY * maxSpeed);
+        Vector2d vec = new Vector2d(-speedY * maxSpeed, speedX * maxSpeed);
         
         //make sure mag never goes over maxDriveSpeed so driving in all directions will be the same speed
         if(vec.mag() > maxSpeed){

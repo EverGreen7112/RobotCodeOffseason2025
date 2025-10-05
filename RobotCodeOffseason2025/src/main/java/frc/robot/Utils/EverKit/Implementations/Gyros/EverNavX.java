@@ -58,5 +58,9 @@ public class EverNavX implements EverGyro{
     public boolean isConnected() {
         return m_navx.isConnected();
     }
+
+    public void setBoardYaw(){
+        m_navx.getBoardYawAxis();
+    }
     
 }

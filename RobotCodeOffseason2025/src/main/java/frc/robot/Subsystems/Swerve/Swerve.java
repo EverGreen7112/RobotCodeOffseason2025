@@ -25,13 +25,14 @@ public class Swerve extends SubsystemBase implements SwerveConsts{
     private Vector2d m_velocity;
     private double m_angularVelocity, m_offset = 0; // offset for the gyro angle, used to align the robot with the field
     private boolean m_isGyroOriented;
+    private double m_headingDegrees = 0;
 
     private Swerve() {
         SwerveConsts.config();
         m_modules = SwerveConsts.MODULES;
         m_velocity = new Vector2d(0, 0);
         m_angularVelocity = 0;
-        m_isGyroOriented = true;
+        m_isGyroOriented = false;
         m_gyro = new AHRS(NavXComType.kMXP_SPI);
     }
 
@@ -46,6 +47,12 @@ public class Swerve extends SubsystemBase implements SwerveConsts{
     public void periodic() {
         if(DEBUG_MODE)
             log();
+
+        double dt = 0.02; 
+        double angularRateDegPerSec = m_gyro.getRawGyroX();  
+        m_headingDegrees += angularRateDegPerSec * dt;
+        m_headingDegrees = ((m_headingDegrees + 180) % 360 + 360) % 360 - 180;
+            
         updateModules();
     }
 
@@ -79,7 +86,7 @@ public class Swerve extends SubsystemBase implements SwerveConsts{
     }
 
     public double getGyroOrientedAngle(){
-        return (m_gyro.getYaw() + m_offset) * SwerveConsts.GYRO_DIRECTION;
+        return (m_headingDegrees + m_offset) * SwerveConsts.GYRO_DIRECTION;
     }
 
     public void setGyroOffset(double offset){
@@ -194,7 +201,7 @@ public class Swerve extends SubsystemBase implements SwerveConsts{
     }
 
     public Rotation2d getGyroRotation2d(){
-        return new Rotation2d(Math.toRadians(getGyroOrientedAngle()));
+        return Rotation2d.fromDegrees(getGyroOrientedAngle());
     }
 
     public void testModule(int moduleIdx, double targetAngle, double targetSpeed){
@@ -209,7 +216,11 @@ public class Swerve extends SubsystemBase implements SwerveConsts{
 
         //SmartDashboard.putNumber("loc x", Localiztion.getInstance().getPoseEstimator().getEstimatedPosition().getX());
         SmartDashboard.putString("velocity", getRobotOrientedVelocity().toString());
-        SmartDashboard.putNumber("gyro angle", m_gyro.getYaw());
+        SmartDashboard.putNumber("Gyro Rate X", m_gyro.getRawGyroX());
+        SmartDashboard.putNumber("Gyro Rate Y", m_gyro.getRawGyroY());
+        SmartDashboard.putNumber("Gyro Rate Z", m_gyro.getRawGyroZ());
+        
+        SmartDashboard.putNumber("gyro angle", m_headingDegrees);
         SmartDashboard.putNumber("angular velocity", getAngularVelocity());
        
 

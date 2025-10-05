@@ -47,7 +47,7 @@ public class RobotContainer {
   //commands
   public static final Trigger chassisPovRight = chassis.povRight();
   public static final Trigger chassisPovLeft = chassis.povLeft();
-  public static final TeleopDriveCommand teleopCommand = new TeleopDriveCommand(chassis::getLeftX, chassis::getLeftY, chassis::getRightX);
+  public static final TeleopDriveCommand teleopCommand = new TeleopDriveCommand(chassis::getLeftY, chassis::getLeftX, chassis::getRightX);
 
   public RobotContainer() {
     configureBindings();
@@ -65,7 +65,7 @@ public class RobotContainer {
     
     //elevator
     chassisA.whileTrue( new MoveElevatorTo(ElevatorLevel.CLOSED));
-    chassisY.onTrue( new MoveElevatorTo(ElevatorLevel.L4));
+    chassisY.onTrue( new MoveElevatorTo(ElevatorLevel.L1));
     //chassisStart.whileTrue( new MoveElevatorManually());
 
 
