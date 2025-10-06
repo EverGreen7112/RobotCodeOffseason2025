@@ -8,6 +8,8 @@ import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.EventMarker;
 import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.path.PathPlannerPath;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -69,10 +71,10 @@ public class SwerveAutoController {
 
         configureCommands(); //configure commands must be registered before the creation of any paths
         
-
         PathPlannerAuto left = new PathPlannerAuto("left 3 L4");
 
         //left.event("aa").onTrue(new MoveElevatorTo(ElevatorLevel.L4));
+        
 
         m_autoChooser = new SendableChooser<Command>();
         m_autoChooser.addOption("middle", new PathPlannerAuto("Middle 1 L4"));

@@ -13,6 +13,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
+import frc.robot.Commands.Elevator.MoveElevatorToSelectedLevel;
 //import frc.robot.Commands.Elevator.MoveElevatorToSelectedLevel;
 import frc.robot.Subsystems.Swerve.Swerve;
 import frc.robot.Subsystems.Swerve.SwerveAngleController;
@@ -31,6 +32,7 @@ public class AlignToBranchCommand extends Command{
     private Pose2d m_target;
     private ReefFace m_reefFace;
     private boolean m_isRightBranch;
+
     private ProfiledPIDController m_xController;
     private ProfiledPIDController m_yController;
 
@@ -52,7 +54,6 @@ public class AlignToBranchCommand extends Command{
         m_xController.reset(pose.getX());
         m_yController.reset(pose.getY());
 
-        //(new MoveElevatorToSelectedLevel()).schedule();;
     }
 
     @Override
@@ -61,8 +62,8 @@ public class AlignToBranchCommand extends Command{
         double xOutput = m_xController.calculate(pose.getX(), m_target.getX());
         double yOutput = m_yController.calculate(pose.getY(), m_target.getY());
 
-        SmartDashboard.putNumber("x", pose.getX());
-        SmartDashboard.putNumber("y", pose.getY());
+        SmartDashboard.putNumber("X", pose.getX());
+        SmartDashboard.putNumber("Y", pose.getY());
 
         if(Math.abs(pose.getX() - m_target.getX()) < POS_ERROR_TOLERANCE)   
            xOutput = 0;
@@ -73,6 +74,7 @@ public class AlignToBranchCommand extends Command{
         Vector2d fieldOrientedVel = new Vector2d(xOutput, yOutput);
         fieldOrientedVel.rotate(pose.getRotation().getRadians() * SwerveConsts.GYRO_DIRECTION);
         Swerve.getInstance().driveByVelocity(fieldOrientedVel, false);
+        (new MoveElevatorToSelectedLevel()).schedule();
 
     }
 
@@ -88,8 +90,6 @@ public class AlignToBranchCommand extends Command{
     public void end(boolean interrupted) {
         SwerveAngleController.getInstance().stop();
         Swerve.getInstance().stop();
-
-
     }
 
 

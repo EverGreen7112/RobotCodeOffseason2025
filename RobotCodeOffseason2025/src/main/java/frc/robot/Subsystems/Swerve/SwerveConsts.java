@@ -1,6 +1,8 @@
 package frc.robot.Subsystems.Swerve;
 
 import com.ctre.phoenix6.configs.Slot0Configs;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Utils.EverKit.EverAbsEncoder;
 import frc.robot.Utils.EverKit.EverEncoder;
 import frc.robot.Utils.EverKit.EverMotorController;
@@ -156,11 +158,11 @@ public interface SwerveConsts{
                absEncoder.setPosConversionFactor(360.0);
            }
    
-           ABS_ENCODERS[0].setOffset(80.507); //80.5078125
-           ABS_ENCODERS[1].setOffset(137.37); //-42.275394439697266
-           ABS_ENCODERS[2].setOffset(-149.150); //-149.50196838378906
-           ABS_ENCODERS[3].setOffset(-27.509); //-34.8046875
-       
+           ABS_ENCODERS[0].setOffset(81.474609375);//80.507); //80.5078125
+           ABS_ENCODERS[1].setOffset(138.1640625);//137.37); //-42.275394439697266
+           ABS_ENCODERS[2].setOffset(-150);//-149.150); //-149.50196838378906
+           ABS_ENCODERS[3].setOffset(-31.11328125);//-27.509); //-34.8046875
+
    
            for (EverTalonFXPIDController velocityController : WHEEL_VELOCITY_CONTROLLERS) {
                Slot0Configs configs = new Slot0Configs();

@@ -35,8 +35,8 @@ public class TeleopDriveCommand extends Command{
     public void execute() {
         
 
-        double speedX = m_xLimiter.calculate(m_xSpeedInput.get());
-        double speedY = m_yLimiter.calculate(m_ySpeedInput.get());
+        double speedX = m_xSpeedInput.get();
+        double speedY = m_ySpeedInput.get();
         double angularVel = m_angularVelocityInput.get();
 
         if(Math.abs(speedX) < JOYSTICK_DEADZONE)
@@ -45,7 +45,7 @@ public class TeleopDriveCommand extends Command{
             speedY = 0; 
         if(Math.abs(angularVel) < JOYSTICK_DEADZONE)
             angularVel = 0;
-
+            
         angularVel = Funcs.roundAfterDecimalPoint(angularVel, 2);
         speedX = Funcs.roundAfterDecimalPoint(speedX, 2);
         speedY = Funcs.roundAfterDecimalPoint(speedY, 2);

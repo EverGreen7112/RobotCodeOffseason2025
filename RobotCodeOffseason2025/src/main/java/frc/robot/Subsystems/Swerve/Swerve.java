@@ -25,7 +25,8 @@ public class Swerve extends SubsystemBase implements SwerveConsts{
     private Vector2d m_velocity;
     private double m_angularVelocity, m_offset = 0; // offset for the gyro angle, used to align the robot with the field
     private boolean m_isGyroOriented;
-    private double m_headingDegrees = 0;
+    private double 
+    m_headingDegrees = 0;
 
     private Swerve() {
         SwerveConsts.config();
@@ -190,6 +191,7 @@ public class Swerve extends SubsystemBase implements SwerveConsts{
 
     public void resetGyro(){
         m_headingDegrees = 0;
+        //m_gyro.reset();
     }
 
     public double getHeadingDegree(){

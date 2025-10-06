@@ -28,12 +28,14 @@ public class ReefFace {
         new ReefFace(12.23, 4.03, 0,    12.23,4.2,0,12.23,3.83,0),
         new ReefFace(12.64, 3.31, 60,   12.5,3.395,60,12.78,3.225,60),
         new ReefFace(13.47, 3.31, 120,  13.33,3.225,120,13.61,3.395,120),
-        new ReefFace(13.89, 4.03, 180,  13.89,3.83,180,13.89,4.2,180),
+        new ReefFace(13.89, 
+        4.03, 180,  13.89,3.83,180,13.89,4.2,180),
         new ReefFace(13.47, 4.75, 240,  13.61,4.665,240,13.33,4.835,240),
         new ReefFace(12.64, 4.75, 300,  12.78,4.835,300,12.5,4.665,300)
 
     };
-    private final double SCORE_MECHANISM_OFFSET = 0.1;
+    private final double RIGHT_SCORE_MECHANISM_OFFSET = 0.1;
+    private final double LEFT_SCORE_MECHANISM_OFFSET = 0.09;
 
     public ReefFace(Pose2d facePose, Pose2d leftBranchPose, Pose2d rightBranchPose){
         m_facePose = facePose;
@@ -54,7 +56,7 @@ public class ReefFace {
     }
 
     public Pose2d getFaceRobotPose(){
-        return m_facePose.plus(getDeltaToScoringPoint(m_facePose));
+        return m_facePose.plus(getDeltaToScoringPoint(m_facePose,true));
     }
 
     public Pose2d getLeftBranchPose(){
@@ -62,7 +64,7 @@ public class ReefFace {
     }
 
     public Pose2d getLeftBranchRobotPose(){
-        return m_leftBranchPose.plus(getDeltaToScoringPoint(m_leftBranchPose));
+        return m_leftBranchPose.plus(getDeltaToScoringPoint(m_leftBranchPose,false));
     }
 
     public Pose2d getRightBranchPose(){
@@ -70,7 +72,7 @@ public class ReefFace {
     }
 
     public Pose2d getRightBranchRobotPose(){
-        return m_rightBranchPose.plus(getDeltaToScoringPoint(m_rightBranchPose));
+        return m_rightBranchPose.plus(getDeltaToScoringPoint(m_rightBranchPose,true));
     }
 
 
@@ -79,9 +81,10 @@ public class ReefFace {
         return this.m_facePose.toString();
     }
 
-    private Transform2d getDeltaToScoringPoint(Pose2d target){
+    private Transform2d getDeltaToScoringPoint(Pose2d target,boolean isRight){
+        double scoreMechanismOffset = (isRight) ? RIGHT_SCORE_MECHANISM_OFFSET : LEFT_SCORE_MECHANISM_OFFSET;
         double chassisLength = SwerveConsts.BUMPERS_THICKNESS + 0.5 * SwerveConsts.CHASSIS_LENGTH;
-        return  (new Transform2d(-chassisLength, SCORE_MECHANISM_OFFSET, new Rotation2d()));
+        return  (new Transform2d(-chassisLength, scoreMechanismOffset, new Rotation2d()));
     }
     
 }

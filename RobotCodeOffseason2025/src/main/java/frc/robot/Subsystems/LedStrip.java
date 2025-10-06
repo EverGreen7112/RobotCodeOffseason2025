@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.LEDPattern;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.Subsystems.Climber.Climber;
 import frc.robot.Subsystems.Dispenser.Dispenser;
@@ -124,25 +125,29 @@ public class LedStrip implements Periodic {
              m_turnClimberLedsOn = false;
         
         if(Climber.getInstance().isCageLocked()){
-             m_turnClimberLedsOn = true;
-         }
-         else if(SwerveAutoController.isRobotAligning){
-             setLedPattern(LedPattern.ROBOT_ALIGNING);
-         }
-         else if(RobotOperatorController.getInstance().getLed()){
-             setLedPattern(LedPattern.READY_FOR_CORAL);
-         }
-         else if(Dispenser.getInstance().isAtEntry() || Dispenser.getInstance().isAtExit()){
-             setLedPattern(LedPattern.CORAL_IN_ROBOT);
-         }
-         else if(m_turnClimberLedsOn){
-             setLedPattern(LedPattern.CAGE_LOCKED);
-         }
-         else {
-             setLedPattern(LedPattern.DEFAULT_COLOR);
-         }
+            m_turnClimberLedsOn = true;
+        }
 
-        //setLedPattern(LedPattern.CAGE_LOCKED);
+        if(!m_turnClimberLedsOn){
+            if(SwerveAutoController.isRobotAligning){
+                setLedPattern(LedPattern.ROBOT_ALIGNING);
+            }
+            else if(RobotOperatorController.getInstance().getLed()){
+                setLedPattern(LedPattern.READY_FOR_CORAL);
+            }
+            else if(Dispenser.getInstance().isAtEntry() || Dispenser.getInstance().isAtExit()){
+                setLedPattern(LedPattern.CORAL_IN_ROBOT);
+            }
+            else {
+                setLedPattern(LedPattern.DEFAULT_COLOR);
+            }
+        }
+
+        else{
+            setLedPattern(LedPattern.CAGE_LOCKED);
+            SmartDashboard.putNumber("cnt", 1);
+        }
+        
 
     }
 

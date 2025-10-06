@@ -21,6 +21,7 @@ import frc.robot.Subsystems.LedStrip;
 import frc.robot.Subsystems.Swerve.Localization;
 import frc.robot.Subsystems.Swerve.Swerve;
 import frc.robot.Subsystems.Swerve.SwerveAutoController;
+import frc.robot.Subsystems.Swerve.SwerveConsts;
 import frc.robot.Utils.ReefFace;
 import frc.robot.Utils.RobotOperatorController;
 import frc.robot.Utils.EverKit.Periodic;
@@ -51,19 +52,19 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData("Field", m_field);
     LedStrip.getInstance().initialize();
 
-      SmartDashboard.putString("right branch" + 0, ReefFace.RED_REEF[0].getRightBranchRobotPose().toString());
-      SmartDashboard.putString("right branch" + 1, ReefFace.RED_REEF[1].getRightBranchRobotPose().toString());
-      SmartDashboard.putString("right branch" + 2, ReefFace.RED_REEF[2].getRightBranchRobotPose().toString());
-      SmartDashboard.putString("right branch" + 3, ReefFace.RED_REEF[3].getRightBranchRobotPose().toString());
-      SmartDashboard.putString("right branch" + 4, ReefFace.RED_REEF[4].getRightBranchRobotPose().toString());
-      SmartDashboard.putString("right branch" + 5, ReefFace.RED_REEF[5].getRightBranchRobotPose().toString());
+      SmartDashboard.putString("right branch" + 0, ReefFace.BLUE_REEF[0].getRightBranchRobotPose().toString());
+      SmartDashboard.putString("right branch" + 1, ReefFace.BLUE_REEF[1].getRightBranchRobotPose().toString());
+      SmartDashboard.putString("right branch" + 2, ReefFace.BLUE_REEF[2].getRightBranchRobotPose().toString());
+      SmartDashboard.putString("right branch" + 3, ReefFace.BLUE_REEF[3].getRightBranchRobotPose().toString());
+      SmartDashboard.putString("right branch" + 4, ReefFace.BLUE_REEF[4].getRightBranchRobotPose().toString());
+      SmartDashboard.putString("right branch" + 5, ReefFace.BLUE_REEF[5].getRightBranchRobotPose().toString());
 
-      SmartDashboard.putString("left branch" + 0, ReefFace.RED_REEF[0].getLeftBranchRobotPose().toString());
-      SmartDashboard.putString("left branch" + 1, ReefFace.RED_REEF[1].getLeftBranchRobotPose().toString());
-      SmartDashboard.putString("left branch" + 2, ReefFace.RED_REEF[2].getLeftBranchRobotPose().toString());
-      SmartDashboard.putString("left branch" + 3, ReefFace.RED_REEF[3].getLeftBranchRobotPose().toString());
-      SmartDashboard.putString("left branch" + 4, ReefFace.RED_REEF[4].getLeftBranchRobotPose().toString());
-      SmartDashboard.putString("left branch" + 5, ReefFace.RED_REEF[5].getLeftBranchRobotPose().toString());
+      SmartDashboard.putString("left branch" + 0, ReefFace.BLUE_REEF[0].getLeftBranchRobotPose().toString());
+      SmartDashboard.putString("left branch" + 1, ReefFace.BLUE_REEF[1].getLeftBranchRobotPose().toString());
+      SmartDashboard.putString("left branch" + 2, ReefFace.BLUE_REEF[2].getLeftBranchRobotPose().toString());
+      SmartDashboard.putString("left branch" + 3, ReefFace.BLUE_REEF[3].getLeftBranchRobotPose().toString());
+      SmartDashboard.putString("left branch" + 4, ReefFace.BLUE_REEF[4].getLeftBranchRobotPose().toString());
+      SmartDashboard.putString("left branch" + 5, ReefFace.BLUE_REEF[5].getLeftBranchRobotPose().toString());
 
   }
 
@@ -82,6 +83,11 @@ public class Robot extends TimedRobot {
     m_field.setRobotPose(Localization.getInstance().getCurrentPoint());
 
     LedStrip.getInstance().periodic();
+
+    SmartDashboard.putNumber("0", SwerveConsts.ABS_ENCODERS[0].getAbsPos());
+    SmartDashboard.putNumber("1", SwerveConsts.ABS_ENCODERS[1].getAbsPos());
+    SmartDashboard.putNumber("2", SwerveConsts.ABS_ENCODERS[2].getAbsPos());
+    SmartDashboard.putNumber("3", SwerveConsts.ABS_ENCODERS[3].getAbsPos());
 
   } 
 
