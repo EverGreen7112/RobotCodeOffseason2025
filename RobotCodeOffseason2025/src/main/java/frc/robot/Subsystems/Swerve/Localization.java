@@ -132,6 +132,7 @@ public class Localization implements Periodic {
         avgDist /= numTags;
 
         boolean isTooFar = avgDist > MAX_DISTANCE_FROM_TAG;
+
         SmartDashboard.putBoolean("OUT OF FIELD", outOfField);
         SmartDashboard.putBoolean("ABOVE CAMERA", aboveCamera);
         SmartDashboard.putBoolean("UNDERGROUND", underGround);

@@ -66,12 +66,12 @@ public class Climber extends SubsystemBase{
     }
 
     public boolean cantOpen(){
-        return false;//m_encoder.getPos() >= 185 || m_distance.getValue() >= 1800;//185;
+        return m_distance.getValue() >= 1700;//185;
         
     }
 
     public boolean cantClose(){
-        return  false;//m_distance.getValue() <= 800;//185;
+        return  m_distance.getValue() <= 800;//185;
 
     }
 

@@ -33,7 +33,7 @@ public class ReefFace {
         new ReefFace(12.64, 4.75, 300,  12.78,4.835,300,12.5,4.665,300)
 
     };
-    private final double SCORE_MECHANISM_OFFSET = 0.16;
+    private final double SCORE_MECHANISM_OFFSET = 0.1;
 
     public ReefFace(Pose2d facePose, Pose2d leftBranchPose, Pose2d rightBranchPose){
         m_facePose = facePose;
@@ -72,6 +72,7 @@ public class ReefFace {
     public Pose2d getRightBranchRobotPose(){
         return m_rightBranchPose.plus(getDeltaToScoringPoint(m_rightBranchPose));
     }
+
 
     @Override
     public String toString(){

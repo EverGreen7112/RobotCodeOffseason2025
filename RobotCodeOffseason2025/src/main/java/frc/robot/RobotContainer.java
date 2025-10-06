@@ -22,6 +22,7 @@ import frc.robot.Commands.Swerve.ManualDrive.TeleopDriveCommand;
 import frc.robot.Commands.Swerve.ManualDrive.ChangeTeleopSpeedModeCommand.SpeedMode;
 import frc.robot.Subsystems.Elevator.Elevator.ElevatorLevel;
 import frc.robot.Subsystems.Swerve.Swerve;
+import frc.robot.Utils.RobotOperatorController;
 
 public class RobotContainer {
 
@@ -65,7 +66,9 @@ public class RobotContainer {
     
     //elevator
     chassisA.whileTrue( new MoveElevatorTo(ElevatorLevel.CLOSED));
-    chassisY.onTrue( new MoveElevatorTo(ElevatorLevel.L1));
+    chassisY.onTrue( new MoveElevatorToSelectedLevel());
+    //chassisY.onTrue( new MoveElevatorTo(ElevatorLevel.L1));
+
     //chassisStart.whileTrue( new MoveElevatorManually());
 
 

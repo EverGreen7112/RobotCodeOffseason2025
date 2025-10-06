@@ -15,15 +15,15 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-//import frc.robot.Commands.Dispenser.AutoReadyForCoralCommand;
-//import frc.robot.Commands.Dispenser.WaitUntilCoralIsInCommand;
-//import frc.robot.Commands.Dispenser.WaitUntilCoralIsOutCommand;
-//import frc.robot.Commands.Elevator.MoveElevatorTo;
-//import frc.robot.Commands.Elevator.WaitUntilElevatorAt;
+import frc.robot.Commands.Dispenser.AutoReadyForCoralCommand;
+import frc.robot.Commands.Dispenser.WaitUntilCoralIsInCommand;
+import frc.robot.Commands.Dispenser.WaitUntilCoralIsOutCommand;
+import frc.robot.Commands.Elevator.MoveElevatorTo;
+import frc.robot.Commands.Elevator.WaitUntilElevatorAt;
 import frc.robot.Commands.Swerve.AutoDrive.AlignToBranchCommand;
 import frc.robot.Commands.Swerve.AutoDrive.AlignToBranchInAutoCommand;
-//import frc.robot.Subsystems.Dispenser.Dispenser;
-//import frc.robot.Subsystems.Elevator.Elevator.ElevatorLevel;
+import frc.robot.Subsystems.Dispenser.Dispenser;
+import frc.robot.Subsystems.Elevator.Elevator.ElevatorLevel;
 import frc.robot.Utils.ReefFace;
 
 public class SwerveAutoController {
@@ -114,7 +114,7 @@ public class SwerveAutoController {
     };
 
     public void configureCommands(){
-        /* 
+        
         NamedCommands.registerCommand("MoveElevatorToL1", new MoveElevatorTo(ElevatorLevel.L1));
         NamedCommands.registerCommand("MoveElevatorToL2", new MoveElevatorTo(ElevatorLevel.L2));
         NamedCommands.registerCommand("MoveElevatorToL3", new MoveElevatorTo(ElevatorLevel.L3));
@@ -134,6 +134,6 @@ public class SwerveAutoController {
         NamedCommands.registerCommand("StopDispense", new InstantCommand(() -> {Dispenser.getInstance().stop();}));
         NamedCommands.registerCommand("TurnOnLeds", new AutoReadyForCoralCommand());
         
-        */
+        
     }
 }

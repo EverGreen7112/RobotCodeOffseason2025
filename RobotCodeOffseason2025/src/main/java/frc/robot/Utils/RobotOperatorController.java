@@ -38,6 +38,7 @@ public class RobotOperatorController implements Periodic{
         m_ledSubscriber = m_table.getBooleanTopic("led").subscribe(false);
 
         m_networkTableInst.startServer();
+        start(PeriodicTime.kTeleopPeriodic);
     }   
 
     public static RobotOperatorController getInstance(){
@@ -54,6 +55,7 @@ public class RobotOperatorController implements Periodic{
 
         if(DEBUG_MODE)
             log();
+        SmartDashboard.putNumber("ima scha", m_branch);
     }
 
     public double getBranch(){

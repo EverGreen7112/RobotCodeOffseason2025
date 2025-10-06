@@ -189,7 +189,11 @@ public class Swerve extends SubsystemBase implements SwerveConsts{
     }
 
     public void resetGyro(){
-        m_gyro.reset();
+        m_headingDegrees = 0;
+    }
+
+    public double getHeadingDegree(){
+        return m_headingDegrees;
     }
 
     public SwerveModulePosition[] getModulesPositions() {
@@ -218,7 +222,8 @@ public class Swerve extends SubsystemBase implements SwerveConsts{
         SmartDashboard.putString("velocity", getRobotOrientedVelocity().toString());
         SmartDashboard.putNumber("Gyro Rate X", m_gyro.getRawGyroX());
         SmartDashboard.putNumber("Gyro Rate Y", m_gyro.getRawGyroY());
-        SmartDashboard.putNumber("Gyro Rate Z", m_gyro.getRawGyroZ());
+        SmartDashboard.putNumber("Gyro Rate Z", -m_gyro.getPitch());
+
         
         SmartDashboard.putNumber("gyro angle", m_headingDegrees);
         SmartDashboard.putNumber("angular velocity", getAngularVelocity());
