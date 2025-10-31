@@ -28,10 +28,51 @@ public class GamePieceDetector {
         return m_instance;
     }
 
+    public Translation3d getClosestGamePieceByType(GamePieceType gamePieceType){
+        Translation3d gamePieceToRobot = new Translation3d();
+
+        ArrayList<GamePieceCamera> detectedGamePieceCams = new ArrayList<>();
+        ArrayList<PhotonTrackedTarget> closestGamePiecesOfWantedType = new ArrayList<>();
+        for(GamePieceCamera cam : M_CAMS){
+            if(cam.getGamePieces().getBestTarget() != null){
+                detectedGamePieceCams.add(cam);
+                closestGamePiecesOfWantedType.add(cam.getGamePieces().getBestTarget());
+            }
+        }
+
+        if(closestGamePiecesOfWantedType.isEmpty())
+            return new Translation3d(0,0,0);
+
+        GamePieceCamera closestGamePieceCam = detectedGamePieceCams.get(0);
+        PhotonTrackedTarget closestGamePiece = closestGamePiecesOfWantedType.get(0);
+        for (PhotonTrackedTarget gamePiece : closestGamePiecesOfWantedType) {
+            if(gamePiece.getArea() > closestGamePiece.getArea())
+                closestGamePiece = gamePiece;
+                closestGamePieceCam = detectedGamePieceCams.get(
+                                       closestGamePiecesOfWantedType.indexOf(closestGamePiece));
+        }
+        
+        switch(gamePieceType){
+            case Coral:
+                gamePieceToRobot = Funcs.calculateCoralTranslation();
+                break;
+            case Algea:
+                gamePieceToRobot = Funcs.calculateAlgeaTranslation();
+                break;
+  
+        }
+
+        gamePieceToRobot.plus(closestGamePieceCam.getRobotToCam());
+        
+        return gamePieceToRobot;
+        
+    }
+
+
     /**
      * 
      * @return the gamepiece position relative to the robot center
-     */
+     
     public Translation3d getClosestCoralTranslation3d() {
         Translation3d gamePieceToCam = new Translation3d();
         ArrayList<GamePieceCamera> coralCams = new ArrayList<GamePieceCamera>();
@@ -64,5 +105,5 @@ public class GamePieceDetector {
         gamePieceToCam = new Translation3d(z,x,y);
         gamePieceToCam.rotateBy(new Rotation3d());//need to rotate by gyro rotation
         return closestCoralCam.getRobotToCam().plus(gamePieceToCam);
-    }
+    }*/
 }
