@@ -71,7 +71,6 @@ public class SwerveAutoController {
 
         configureCommands(); //configure commands must be registered before the creation of any paths
         
-        PathPlannerAuto left = new PathPlannerAuto("left 3 L4");
 
         //left.event("aa").onTrue(new MoveElevatorTo(ElevatorLevel.L4));
         
@@ -79,8 +78,7 @@ public class SwerveAutoController {
         m_autoChooser = new SendableChooser<Command>();
         m_autoChooser.addOption("middle", new PathPlannerAuto("Middle 1 L4"));
         m_autoChooser.addOption("right", new PathPlannerAuto("right 3 L4"));
-        m_autoChooser.addOption("left", left);
-        m_autoChooser.addOption("test", new PathPlannerAuto("test"));
+        m_autoChooser.addOption("left", new PathPlannerAuto("left 3 L4"));
         
 
         m_allianceChooser = new SendableChooser<Alliance>();

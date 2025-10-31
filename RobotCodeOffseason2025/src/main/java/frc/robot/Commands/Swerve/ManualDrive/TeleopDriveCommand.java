@@ -19,7 +19,7 @@ public class TeleopDriveCommand extends Command{
     private Supplier<Double> m_angularVelocityInput;
     private SlewRateLimiter m_xLimiter;
     private SlewRateLimiter m_yLimiter;
-    private double m_maxAccelaration = 5;
+    private double m_maxAccelaration = 3;
     
     public TeleopDriveCommand(Supplier<Double> xSpeedInput, Supplier<Double> ySpeedInput, Supplier<Double> angularVelocityInput){
         addRequirements(Swerve.getInstance());
@@ -35,8 +35,8 @@ public class TeleopDriveCommand extends Command{
     public void execute() {
         
 
-        double speedX = m_xSpeedInput.get();
-        double speedY = m_ySpeedInput.get();
+        double speedX = m_xLimiter.calculate(m_xSpeedInput.get());
+        double speedY = m_yLimiter.calculate(m_ySpeedInput.get());
         double angularVel = m_angularVelocityInput.get();
 
         if(Math.abs(speedX) < JOYSTICK_DEADZONE)

@@ -40,11 +40,11 @@ public class Localization implements Periodic {
 
 
     private static final LocalizationCamera[] CAMS = {
-            new LocalizationCamera("left_cam",
+            new LocalizationCamera("right_cam",
                     AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeAndyMark),
                     new Transform3d(new Translation3d(0.115, 0.055, 0.32), new Rotation3d(0, 0 ,0)),
                     VecBuilder.fill(0.0, 0.0, 0), VecBuilder.fill(0.0, 0.0, 0)),
-            new LocalizationCamera("right_cam",
+            new LocalizationCamera("left_cam",
                                         AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeAndyMark),
                                         new Transform3d(0.115, -0.155, 0.32, new Rotation3d(0, 0, 0)),
                                         VecBuilder.fill(0, 0, 0), VecBuilder.fill(0, 0, 0)),

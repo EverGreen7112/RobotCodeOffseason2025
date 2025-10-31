@@ -45,7 +45,7 @@ public interface SwerveConsts{
     
     public static final EverSparkMax 
             TL_STEER_MOTOR = new EverSparkMax(11),
-            TR_STEER_MOTOR = new EverSparkMax(17),
+            TR_STEER_MOTOR = new EverSparkMax(13),
             DL_STEER_MOTOR = new EverSparkMax(10),
             DR_STEER_MOTOR = new EverSparkMax(2);
 

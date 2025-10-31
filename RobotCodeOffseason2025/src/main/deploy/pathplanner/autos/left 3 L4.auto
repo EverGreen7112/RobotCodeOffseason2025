@@ -5,15 +5,21 @@
     "data": {
       "commands": [
         {
-          "type": "parallel",
-          "data": {
-            "commands": []
-          }
-        },
-        {
           "type": "sequential",
           "data": {
             "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "MoveElevatorToGround"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "StopDispense"
+                }
+              },
               {
                 "type": "path",
                 "data": {
@@ -54,20 +60,7 @@
           }
         },
         {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "b10CT"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "parallel",
+          "type": "sequential",
           "data": {
             "commands": [
               {
@@ -77,9 +70,15 @@
                 }
               },
               {
+                "type": "path",
+                "data": {
+                  "pathName": "b10CT"
+                }
+              },
+              {
                 "type": "named",
                 "data": {
-                  "name": "WaitUntilCoralIsOut"
+                  "name": "WaitUntilCoralIsIn"
                 }
               },
               {
@@ -92,27 +91,26 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "sequential",
           "data": {
             "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "MoveElevatorToGround"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "StopDispense"
+                }
+              },
               {
                 "type": "path",
                 "data": {
                   "pathName": "CTb11"
                 }
-              }
-            ]
-          }
-        },
-        {
-          "type": "sequential",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "MoveElevatorToL3"
-                }
               },
               {
                 "type": "named",
@@ -148,32 +146,31 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "sequential",
           "data": {
             "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "MoveElevatorToGround"
+                }
+              },
               {
                 "type": "path",
                 "data": {
                   "pathName": "b11CT"
                 }
-              }
-            ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "MoveElevatorToGround"
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
+              },
               {
-                "type": "path",
+                "type": "named",
                 "data": {
-                  "pathName": "CTB12"
+                  "name": "WaitUntilCoralIsIn"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "TurnOnLeds"
                 }
               }
             ]
@@ -183,6 +180,24 @@
           "type": "sequential",
           "data": {
             "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "MoveElevatorToGround"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "StopDispense"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "CTB12"
+                }
+              },
               {
                 "type": "named",
                 "data": {
@@ -216,16 +231,10 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "MoveElevatorToL3"
+                  "name": "MoveElevatorToGround"
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "MoveElevatorToGround"
           }
         }
       ]

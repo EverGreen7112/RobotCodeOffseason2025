@@ -89,6 +89,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("2", SwerveConsts.ABS_ENCODERS[2].getAbsPos());
     SmartDashboard.putNumber("3", SwerveConsts.ABS_ENCODERS[3].getAbsPos());
 
+
   } 
 
   @Override
@@ -130,7 +131,6 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-    Swerve.getInstance().setGyroOffset(Swerve.getInstance().getHeadingDegree());
   }
 
   @Override
