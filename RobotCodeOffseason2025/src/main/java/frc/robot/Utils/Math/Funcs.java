@@ -6,6 +6,9 @@ import org.photonvision.targeting.TargetCorner;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
+import frc.robot.Utils.GamePieceDetector;
 
 public class Funcs {
 
@@ -13,6 +16,7 @@ public class Funcs {
      * @param vec - vector in the standard 2d axes (positive y is forward positive x is right)
      * @return the vector in wpilib's axes, NWU - positive X is forward positive Y is left
      */
+
     public static Vector2d convertFromStandardAxesToWpilibs(Vector2d vec){
         Vector2d tmp = new Vector2d(vec).rotate(Math.toRadians(90));
         return tmp;
@@ -66,67 +70,91 @@ public class Funcs {
      * @return
      * corners orgenized in the order tL-> tR ->bR ->bL
      */
-    public static TargetCorner[] orgenizeTargets(List<TargetCorner> corners){
-        TargetCorner[] cornersArr = new TargetCorner[4];
-        cornersArr[0] = corners.get(0); 
-        for (TargetCorner Corner : corners) {
-            if(Corner.x < cornersArr[0].x && Corner.y < cornersArr[0].y){
-                cornersArr[0] = Corner;
-            }
-        }
-        cornersArr[1] = corners.get(0); 
-        for (TargetCorner Corner : corners) {
-            if(Corner.x > cornersArr[1].x && Corner.y < cornersArr[0].y){
-                cornersArr[1] = Corner;
-            }
-        }
-
-        cornersArr[2] = corners.get(0); 
-        for (TargetCorner Corner : corners) {
-            if(Corner.x > cornersArr[2].x && Corner.y > cornersArr[0].y){
-                cornersArr[2] = Corner;
-            }
-        }
-
-        cornersArr[3] = corners.get(0); 
-        for (TargetCorner Corner : corners) {
-            if(Corner.x < cornersArr[3].x && Corner.y > cornersArr[0].y){
-                cornersArr[3] = Corner;
-            }
-        }
-        return cornersArr;
-    }
-
-    public static double getShortestSide(TargetCorner[] cornersArr){
-        double verticalSide = Math.abs(cornersArr[1].y - cornersArr[2].y);
-        double horizontalSide = Math.abs(cornersArr[0].x - cornersArr[1].x);
-        return (verticalSide <= horizontalSide) ? verticalSide : horizontalSide;
-    }
     
-    /**
-     * return the center of the rectengle 0 - x, 1 - y
-     */
-    public static double[] getRectCenter(TargetCorner[] cornersArr){
-        double x = (Math.abs(cornersArr[0].x - cornersArr[1].x)) / 2;
-        double y = (Math.abs(cornersArr[1].y - cornersArr[2].y)) / 2;
-        double[] center = new double[2];
-        center[0] = x;
-        center[1] = y;
-        return center;
-    }
-    /**
-     * 
-     * @return hFOV index 0 vFOV index 1 - 16:9 ratio
-     */
-    public static double[] diagFovToHorizontalAndVertialFov(double diagFOV){
-        double[] FovArr = new double[2];
-        FovArr[0] = 2 * Math.atan2(Math.tan(Math.toRadians(diagFOV / 2)) * 16,Math.sqrt(Math.pow(16, 2) + Math.pow(9, 2)));
-        FovArr[1] = 2 * Math.atan2(Math.tan(FovArr[0] / 2) * 9, 16);
-        return FovArr;
-    }
+    // public static TargetCorner[] orgenizeTargets(List<TargetCorner> corners){
+    //     TargetCorner[] cornersArr = new TargetCorner[4];
+    //     cornersArr[0] = corners.get(0); 
+    //     for (TargetCorner Corner : corners) {
+    //         if(Corner.x < cornersArr[0].x && Corner.y < cornersArr[0].y){
+    //             cornersArr[0] = Corner;
+    //         }
+    //     }
+    //     cornersArr[1] = corners.get(0); 
+    //     for (TargetCorner Corner : corners) {
+    //         if(Corner.x > cornersArr[1].x && Corner.y < cornersArr[0].y){
+    //             cornersArr[1] = Corner;
+    //         }
+    //     }
 
-    public static double FovToFocalLenght(double fov, double pxLenght){
-        return pxLenght / ( 2 * Math.tan(fov / 2));
-    }
+    //     cornersArr[2] = corners.get(0); 
+    //     for (TargetCorner Corner : corners) {
+    //         if(Corner.x > cornersArr[2].x && Corner.y > cornersArr[0].y){
+    //             cornersArr[2] = Corner;
+    //         }
+    //     }
+
+    //     cornersArr[3] = corners.get(0); 
+    //     for (TargetCorner Corner : corners) {
+    //         if(Corner.x < cornersArr[3].x && Corner.y > cornersArr[0].y){
+    //             cornersArr[3] = Corner;
+    //         }
+    //     }
+    //     return cornersArr;
+    // }
+
+    // public static double getShortestSide(TargetCorner[] cornersArr){
+    //     double verticalSide = Math.abs(cornersArr[1].y - cornersArr[2].y);
+    //     double horizontalSide = Math.abs(cornersArr[0].x - cornersArr[1].x);
+    //     return (verticalSide <= horizontalSide) ? verticalSide : horizontalSide;
+    // }
+    
+    // /**
+    //  * return the center of the rectengle 0 - x, 1 - y
+    //  */
+    // public static double[] getRectCenter(TargetCorner[] cornersArr){
+    //     double x = (Math.abs(cornersArr[0].x - cornersArr[1].x)) / 2;
+    //     double y = (Math.abs(cornersArr[1].y - cornersArr[2].y)) / 2;
+    //     double[] center = new double[2];
+    //     center[0] = x;
+    //     center[1] = y;
+    //     return center;
+    // }
+    // /**
+    //  * 
+    //  * @return hFOV index 0 vFOV index 1 - 16:9 ratio
+    //  */
+    // public static double[] diagFovToHorizontalAndVertialFov(double diagFOV){
+    //     double[] FovArr = new double[2];
+    //     FovArr[0] = 2 * Math.atan2(Math.tan(Math.toRadians(diagFOV / 2)) * 16,Math.sqrt(Math.pow(16, 2) + Math.pow(9, 2)));
+    //     FovArr[1] = 2 * Math.atan2(Math.tan(FovArr[0] / 2) * 9, 16);
+    //     return FovArr;
+    // }
+
+    // public static double FovToFocalLenght(double fov, double pxLenght){
+    //     return pxLenght / ( 2 * Math.tan(fov / 2));
+    // }
+
+    // /**
+    //  * Todo
+    //  * @return
+    //  */
+    // public static Translation3d calculateCoralTranslation(){
+    //     return null;
+    // }
+
+    // /**
+    //  * Todo
+    //  * @return
+    //  */
+    // public static Translation3d calculateAlgeaTranslation(double focalX,double focalY,double width,
+    //                                                       double hieght, double algeaDiameter, 
+    //                                                       double algeaX, double algeaY){
+
+    //     double z = (focalX * GamePieceDetector.ALGEA_RADIUS) / algeaDiameter;
+    //     double x = (algeaX - (width / 2))  * (z / focalX); 
+    //     double y = (algeaY - (hieght / 2))  * (z / focalY);
+
+    //     return new Translation3d(z,x,y);
+    // }
 
 }

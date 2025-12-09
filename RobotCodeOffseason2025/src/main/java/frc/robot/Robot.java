@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Utils.GamePieceDetector;
 import frc.robot.Utils.EverKit.Periodic;
+import frc.robot.Utils.GamePieceCamera.GamePieceType;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
@@ -29,6 +30,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
+    SmartDashboard.putString("algeaPos",GamePieceDetector.getInstance().getClosestGamePieceByType(GamePieceType.Algea).toString());
   }
 
   @Override
@@ -64,7 +66,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    SmartDashboard.putString("i",GamePieceDetector.getInstance().getClosestCoralTranslation3d().toString());
   }
 
   @Override

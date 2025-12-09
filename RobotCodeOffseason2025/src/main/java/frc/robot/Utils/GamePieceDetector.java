@@ -8,16 +8,23 @@ import org.photonvision.targeting.TargetCorner;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Utils.GamePieceCamera.GamePieceType;
 
 import frc.robot.Utils.Math.Funcs;
-
+// TODO :
+// write algorithm for calculating game pieace distance
+// get real consts
+// test
 public class GamePieceDetector {
-    private static final double CORAL_RADIUS = 0.114;
+    public static final double CORAL_RADIUS = 0.114;
+    public static final double ALGEA_RADIUS = 0.413;
     private static final GamePieceCamera[] M_CAMS = {
-        new GamePieceCamera("left_cam", GamePieceType.Coral, new Translation3d(0,0 , 0), 58,640,360)};
+        new GamePieceCamera("Brio_100", GamePieceType.Algea, 
+        new Transform3d(new Translation3d(0, 0, 0.765), new Rotation3d(0,-85,0)))
+};
     private static GamePieceDetector m_instance = new GamePieceDetector();
 
     public GamePieceDetector() {
@@ -33,8 +40,9 @@ public class GamePieceDetector {
 
         ArrayList<GamePieceCamera> detectedGamePieceCams = new ArrayList<>();
         ArrayList<PhotonTrackedTarget> closestGamePiecesOfWantedType = new ArrayList<>();
+
         for(GamePieceCamera cam : M_CAMS){
-            if(cam.getGamePieces().getBestTarget() != null){
+            if(cam.getGamePieces() != null && cam.getGamePieceType() == gamePieceType){
                 detectedGamePieceCams.add(cam);
                 closestGamePiecesOfWantedType.add(cam.getGamePieces().getBestTarget());
             }
@@ -51,18 +59,27 @@ public class GamePieceDetector {
                 closestGamePieceCam = detectedGamePieceCams.get(
                                        closestGamePiecesOfWantedType.indexOf(closestGamePiece));
         }
-        
+
+        double y = closestGamePieceCam.getRobotToCam().getZ();
         switch(gamePieceType){
             case Coral:
-                gamePieceToRobot = Funcs.calculateCoralTranslation();
+                y -= CORAL_RADIUS / 2;
                 break;
             case Algea:
-                gamePieceToRobot = Funcs.calculateAlgeaTranslation();
+                y -= ALGEA_RADIUS / 2;
                 break;
   
         }
 
-        gamePieceToRobot.plus(closestGamePieceCam.getRobotToCam());
+        double alpha = closestGamePieceCam.getRobotToCam().getRotation().getY() + Math.toRadians(closestGamePiece.getPitch());
+        double hyp = y / Math.tan(alpha);
+        SmartDashboard.putNumber("hyp",hyp);
+        double beta = Math.abs(closestGamePiece.getYaw());
+        double x = hyp * Math.sin(Math.toRadians(beta));
+        double z = hyp * Math.cos(Math.toRadians(beta));
+        gamePieceToRobot = new Translation3d(z,x,y);
+
+        //gamePieceToRobot.plus(closestGamePieceCam.getRobotToCam().getTranslation());
         
         return gamePieceToRobot;
         
