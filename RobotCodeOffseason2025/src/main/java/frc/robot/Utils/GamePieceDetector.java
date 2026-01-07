@@ -23,7 +23,8 @@ public class GamePieceDetector {
     public static final double ALGEA_RADIUS = 0.413;
     private static final GamePieceCamera[] M_CAMS = {
         new GamePieceCamera("Brio_100", GamePieceType.Algea, 
-        new Transform3d(new Translation3d(0, 0, 0.765), new Rotation3d(0,-85,0)))
+        new Transform3d(new Translation3d(0, 0, 0.765), new Rotation3d(0,-85,0)),
+        0,0,0,0, 0)
 };
     private static GamePieceDetector m_instance = new GamePieceDetector();
 
@@ -60,24 +61,13 @@ public class GamePieceDetector {
                                        closestGamePiecesOfWantedType.indexOf(closestGamePiece));
         }
 
-        double y = closestGamePieceCam.getRobotToCam().getZ();
-        switch(gamePieceType){
-            case Coral:
-                y -= CORAL_RADIUS / 2;
-                break;
-            case Algea:
-                y -= ALGEA_RADIUS / 2;
-                break;
-  
-        }
-
-        double alpha = closestGamePieceCam.getRobotToCam().getRotation().getY() + Math.toRadians(closestGamePiece.getPitch());
-        double hyp = y / Math.tan(alpha);
-        SmartDashboard.putNumber("hyp",hyp);
-        double beta = Math.abs(closestGamePiece.getYaw());
-        double x = hyp * Math.sin(Math.toRadians(beta));
-        double z = hyp * Math.cos(Math.toRadians(beta));
-        gamePieceToRobot = new Translation3d(z,x,y);
+        TargetCorner[] corners = Funcs.orgenizeTargets(closestGamePiece.getDetectedCorners());
+        double hieght = Funcs.getLongestSide(corners);
+        double[] center = Funcs.getRectCenter(corners);
+        gamePieceToRobot = Funcs.TrigCalculateGamePieceTranslation(closestGamePieceCam, closestGamePiece, gamePieceType);
+        gamePieceToRobot = Funcs.VisionCalculateGamePieceTranslation(center[0], center[1],hieght,closestGamePieceCam.getFocalY(),
+                                                                     closestGamePieceCam.getFocalX(), closestGamePieceCam.getWidth(),
+                                                                     closestGamePieceCam.getHieght(),closestGamePieceCam.getYFov(),gamePieceType);
 
         //gamePieceToRobot.plus(closestGamePieceCam.getRobotToCam().getTranslation());
         

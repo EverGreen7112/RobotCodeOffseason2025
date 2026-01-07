@@ -18,10 +18,26 @@ public class GamePieceCamera {
     private PhotonCamera m_cam;
     private GamePieceType m_gamePieceType;
     private Transform3d m_robotToCam;
+    private double m_yFov;
     public GamePieceCamera(String camName,GamePieceType gamePieceType,Transform3d robotToCam){
         m_cam = new PhotonCamera(camName);
         m_gamePieceType = gamePieceType;
         m_robotToCam = robotToCam;
+    }
+
+    public GamePieceCamera(String camName, GamePieceType gamePieceType, Transform3d robotToCam,
+                           double focalLenghtX, double focalLenghtY,
+                           double width, double hieght, double yFov)
+    {
+        m_cam = new PhotonCamera(camName);
+        m_gamePieceType = gamePieceType;
+        m_robotToCam = robotToCam;
+        m_focalLenghtX = focalLenghtX;
+        m_focalLenghtY = focalLenghtY;
+        m_frameWidth = width;
+        m_frameHieght = hieght;
+        m_yFov = yFov;
+
     }
 
     public PhotonPipelineResult getGamePieces(){
@@ -54,5 +70,9 @@ public class GamePieceCamera {
 
     public double getHieght(){
         return m_frameHieght;
+    }
+
+    public double getYFov(){
+        return m_yFov;
     }
 }
