@@ -2,6 +2,8 @@ package frc.robot.Utils;
 
 import java.lang.annotation.Documented;
 import java.util.ArrayList;
+import java.util.List;
+
 import org.photonvision.targeting.PhotonTrackedTarget;
 import org.photonvision.targeting.TargetCorner;
 
@@ -24,7 +26,7 @@ public class GamePieceDetector {
     private static final GamePieceCamera[] M_CAMS = {
         new GamePieceCamera("Brio_100", GamePieceType.Algea, 
         new Transform3d(new Translation3d(0, 0, 0.765), new Rotation3d(0,-85,0)),
-        0,0,0,0, 0)
+        640, 480,37.4)
 };
     private static GamePieceDetector m_instance = new GamePieceDetector();
 
@@ -61,18 +63,34 @@ public class GamePieceDetector {
                                        closestGamePiecesOfWantedType.indexOf(closestGamePiece));
         }
 
-        TargetCorner[] corners = Funcs.orgenizeTargets(closestGamePiece.getDetectedCorners());
-        double hieght = Funcs.getLongestSide(corners);
+        TargetCorner[] corners = sortCorners(closestGamePiece.getMinAreaRectCorners());
+        //TargetCorner[] corners = Funcs.orgenizeTargets(closestGamePiece.getMinAreaRectCorners());
+        SmartDashboard.putString("TL", corners[0].x + "," + corners[0].y);
+        SmartDashboard.putString("TR", corners[1].x + "," + corners[1].y);
+        SmartDashboard.putString("BR", corners[2].x + "," + corners[2].y);
+        SmartDashboard.putString("BL", corners[3].x + "," + corners[3].y);
+
+        double[] sides = Funcs.getRectSides(corners);
+        SmartDashboard.putString("Sides", sides[0] + "," + sides[1]);
         double[] center = Funcs.getRectCenter(corners);
-        gamePieceToRobot = Funcs.TrigCalculateGamePieceTranslation(closestGamePieceCam, closestGamePiece, gamePieceType);
-        gamePieceToRobot = Funcs.VisionCalculateGamePieceTranslation(center[0], center[1],hieght,closestGamePieceCam.getFocalY(),
-                                                                     closestGamePieceCam.getFocalX(), closestGamePieceCam.getWidth(),
-                                                                     closestGamePieceCam.getHieght(),closestGamePieceCam.getYFov(),gamePieceType);
+        SmartDashboard.putString("center", center[0] + "," + center[1]);
+        gamePieceToRobot = Funcs.VisionCalculateGamePieceTranslation(center[0], center[1],sides[0], sides[1],
+                                                                     closestGamePieceCam.getWidth(), closestGamePieceCam.getXFov());
 
         //gamePieceToRobot.plus(closestGamePieceCam.getRobotToCam().getTranslation());
         
         return gamePieceToRobot;
         
+    }
+
+    private TargetCorner[] sortCorners(List<TargetCorner> corners){
+        TargetCorner[] cornersArr = new TargetCorner[4];
+        // TL -> TR -> BL -> BR
+        for(TargetCorner corner : corners){
+            
+        }
+        return cornersArr;
+
     }
 
 
