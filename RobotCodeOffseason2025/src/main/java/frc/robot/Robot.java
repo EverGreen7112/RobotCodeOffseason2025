@@ -30,7 +30,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
-    SmartDashboard.putString("algeaPos",GamePieceDetector.getInstance().getClosestGamePieceByType(GamePieceType.Algea).toString());
+    SmartDashboard.putString("algeaPos",GamePieceDetector.getInstance().getClosestGamePieceByTypeLocation(GamePieceType.Algea).toString());
   }
 
   @Override

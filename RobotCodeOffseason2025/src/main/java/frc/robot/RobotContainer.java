@@ -6,13 +6,26 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class RobotContainer {
+
+  private static final int CHASSIS_PORT = 0;
+
+  //controllers
+  public static final CommandXboxController chassis = new CommandXboxController(CHASSIS_PORT);
+
+  //Triggers
+  public static final Trigger chassisA = chassis.a();
+
   public RobotContainer() {
     configureBindings();
   }
 
-  private void configureBindings() {}
+  private void configureBindings() {
+
+  }
 
   public Command getAutonomousCommand() {
     return Commands.print("No autonomous command configured");

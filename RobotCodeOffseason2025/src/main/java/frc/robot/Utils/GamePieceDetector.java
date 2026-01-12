@@ -1,18 +1,14 @@
 package frc.robot.Utils;
 
-import java.lang.annotation.Documented;
 import java.util.ArrayList;
-import java.util.List;
 
 import org.photonvision.targeting.PhotonTrackedTarget;
 import org.photonvision.targeting.TargetCorner;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Utils.GamePieceCamera.GamePieceType;
 
 import frc.robot.Utils.Math.Funcs;
@@ -26,7 +22,7 @@ public class GamePieceDetector {
     private static final GamePieceCamera[] M_CAMS = {
         new GamePieceCamera("Brio_100", GamePieceType.Algea, 
         new Transform3d(new Translation3d(0, 0, 0.765), new Rotation3d(0,-85,0)),
-        640, 480,37.4)
+        640,37.4)
 };
     private static GamePieceDetector m_instance = new GamePieceDetector();
 
@@ -38,8 +34,8 @@ public class GamePieceDetector {
         return m_instance;
     }
 
-    public Translation3d getClosestGamePieceByType(GamePieceType gamePieceType){
-        Translation3d gamePieceToRobot = new Translation3d();
+    public Pose3d getClosestGamePieceByTypeLocation(GamePieceType gamePieceType){
+        Pose3d gamePieceToRobot = new Pose3d();
 
         ArrayList<GamePieceCamera> detectedGamePieceCams = new ArrayList<>();
         ArrayList<PhotonTrackedTarget> closestGamePiecesOfWantedType = new ArrayList<>();
@@ -52,7 +48,7 @@ public class GamePieceDetector {
         }
 
         if(closestGamePiecesOfWantedType.isEmpty())
-            return new Translation3d(0,0,0);
+            return new Pose3d(new Translation3d(), new Rotation3d());
 
         GamePieceCamera closestGamePieceCam = detectedGamePieceCams.get(0);
         PhotonTrackedTarget closestGamePiece = closestGamePiecesOfWantedType.get(0);
@@ -64,60 +60,15 @@ public class GamePieceDetector {
         }
 
         TargetCorner[] corners = Funcs.orgenizeTargets(closestGamePiece.getMinAreaRectCorners());
-        SmartDashboard.putString("TL", corners[0].x + "," + corners[0].y);
-        SmartDashboard.putString("TR", corners[1].x + "," + corners[1].y);
-        SmartDashboard.putString("BR", corners[2].x + "," + corners[2].y);
-        SmartDashboard.putString("BL", corners[3].x + "," + corners[3].y);
-
         double[] sides = Funcs.getRectSides(corners);
-        SmartDashboard.putString("Sides", sides[0] + "," + sides[1]);
         double[] center = Funcs.getRectCenter(corners);
-        SmartDashboard.putString("center", center[0] + "," + center[1]);
-        gamePieceToRobot = Funcs.VisionCalculateGamePieceTranslation(center[0], center[1],sides[0], sides[1],
-                                                                     closestGamePieceCam.getWidth(), closestGamePieceCam.getXFov());
 
-        //gamePieceToRobot.plus(closestGamePieceCam.getRobotToCam().getTranslation());
+        gamePieceToRobot = Funcs.VisionCalculateGamePieceTranslation(center[0], center[1],sides[0], sides[1],
+                                                                     closestGamePieceCam.getWidth(), closestGamePieceCam.getXFov(), GamePieceType.Algea);
+        gamePieceToRobot.plus(closestGamePieceCam.getRobotToCam());
         
         return gamePieceToRobot;
         
     }
 
-
-    /**
-     * 
-     * @return the gamepiece position relative to the robot center
-     
-    public Translation3d getClosestCoralTranslation3d() {
-        Translation3d gamePieceToCam = new Translation3d();
-        ArrayList<GamePieceCamera> coralCams = new ArrayList<GamePieceCamera>();
-        for (GamePieceCamera cam : M_CAMS) {
-            if (cam.getGamePieceType() == GamePieceType.Coral && cam.getGamePieces().hasTargets()) {
-                coralCams.add(cam);
-            }
-        }
-        if (coralCams.isEmpty())
-            return gamePieceToCam;
-        ArrayList<PhotonTrackedTarget> bestCameraCoralTargets  = new ArrayList<PhotonTrackedTarget>();
-        for (GamePieceCamera cam : coralCams) {
-            bestCameraCoralTargets.add(cam.getGamePieces().getBestTarget());
-        }        
-        PhotonTrackedTarget closestCoral = bestCameraCoralTargets.get(0);
-        GamePieceCamera closestCoralCam = coralCams.get(0);
-        for (PhotonTrackedTarget coral : bestCameraCoralTargets) {
-            if(closestCoral.getArea() < coral.getArea()){
-                closestCoral = coral;
-                closestCoralCam = coralCams.get(bestCameraCoralTargets.indexOf(coral));
-            }
-        }
-        TargetCorner[] coralCornersArr = Funcs.orgenizeTargets(closestCoral.getMinAreaRectCorners());
-        double shortestSide = Funcs.getShortestSide(coralCornersArr);
-        double[] coralCenter = Funcs.getRectCenter(coralCornersArr);
-        double z = (closestCoralCam.getFocalX() * CORAL_RADIUS) / shortestSide;
-        double x = ((coralCenter[0] - (closestCoralCam.getWidth() / 2)) * z) / closestCoralCam.getFocalX(); 
-        double y = ((coralCenter[1] - (closestCoralCam.getHieght() / 2)) * z) / closestCoralCam.getFocalY(); 
-        
-        gamePieceToCam = new Translation3d(z,x,y);
-        gamePieceToCam.rotateBy(new Rotation3d());//need to rotate by gyro rotation
-        return closestCoralCam.getRobotToCam().plus(gamePieceToCam);
-    }*/
 }
