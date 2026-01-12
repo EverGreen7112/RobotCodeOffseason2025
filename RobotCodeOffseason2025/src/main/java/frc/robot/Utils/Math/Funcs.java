@@ -1,5 +1,6 @@
 package frc.robot.Utils.Math;
 
+import java.lang.annotation.Target;
 import java.util.List;
 
 import org.photonvision.targeting.PhotonTrackedTarget;
@@ -76,40 +77,41 @@ public class Funcs {
      */
     
     public static TargetCorner[] orgenizeTargets(List<TargetCorner> corners){
-        TargetCorner[] cornersArr = new TargetCorner[4];
-        cornersArr[0] = corners.get(0); 
-        for (TargetCorner Corner : corners) {
-            if(Corner.x < cornersArr[0].x && Corner.y < cornersArr[0].y){
-                cornersArr[0] = Corner;
-            }
-        }
-        cornersArr[1] = corners.get(0); 
-        for (TargetCorner Corner : corners) {
-            if(Corner.x > cornersArr[1].x && Corner.y < cornersArr[0].y){
-                cornersArr[1] = Corner;
+        TargetCorner[] arr = new TargetCorner[4];
+
+        arr[0] = corners.get(0);
+        for(TargetCorner corner : corners){
+            if(corner.x < arr[0].x && corner.y < arr[0].y){
+                arr[0] = corner;
             }
         }
 
-        cornersArr[2] = corners.get(0); 
-        for (TargetCorner Corner : corners) {
-            if(Corner.x > cornersArr[2].x && Corner.y > cornersArr[0].y){
-                cornersArr[2] = Corner;
+        for(TargetCorner corner : corners){
+            if(arr[0].y == corner.y && arr[0].x != corner.x){
+                arr[1] = corner;
             }
         }
 
-        cornersArr[3] = corners.get(0); 
-        for (TargetCorner Corner : corners) {
-            if(Corner.x < cornersArr[3].x && Corner.y > cornersArr[0].y){
-                cornersArr[3] = Corner;
+        for(TargetCorner corner: corners){
+            if(arr[0].x != corner.x && arr[1].y != corner.y){
+                arr[2] = corner;
             }
         }
-        return cornersArr;
+
+        for(TargetCorner corner: corners){
+            if(arr[2].y == corner.y && arr[2].x != corner.x){
+                arr[3] = corner;
+            }
+        }
+
+        return arr;
     }
 
-    public static double getLongestSide(TargetCorner[] cornersArr){
-        double verticalSide = Math.abs(cornersArr[1].y - cornersArr[2].y);
-        double horizontalSide = Math.abs(cornersArr[0].x - cornersArr[1].x);
-        return (verticalSide >= horizontalSide) ? verticalSide : horizontalSide;
+    public static double[] getRectSides(TargetCorner[] cornersArr){
+        double[] sides = new double[2];
+        sides[0] = Math.abs(cornersArr[0].x - cornersArr[1].x);
+        sides[1] = Math.abs(cornersArr[1].y - cornersArr[2].y);
+        return sides;
     }
     
     /**
@@ -150,56 +152,45 @@ public class Funcs {
      * Todo
      * @return
      */
-    public static Translation3d calculateAlgeaTranslation(double focalX,double focalY,double width,
-                                                          double hieght, double algeaDiameter, 
-                                                          double algeaX, double algeaY){
+    // public static Translation3d TrigCalculateGamePieceTranslation(GamePieceCamera closestGamePieceCam, PhotonTrackedTarget closestGamePiece, GamePieceType gamePieceType){
+    //     Translation3d gamePieceToCam;
 
-        double z = (focalX * GamePieceDetector.ALGEA_RADIUS) / algeaDiameter;
-        double x = (algeaX - (width / 2))  * (z / focalX); 
-        double y = (algeaY - (hieght / 2))  * (z / focalY);
-
-        return new Translation3d(z,x,y);
-    }
-    public static Translation3d TrigCalculateGamePieceTranslation(GamePieceCamera closestGamePieceCam, PhotonTrackedTarget closestGamePiece, GamePieceType gamePieceType){
-        Translation3d gamePieceToCam;
-
-        double y = closestGamePieceCam.getRobotToCam().getZ();
-        switch(gamePieceType){
-            case Coral:
-                y -= GamePieceDetector.CORAL_RADIUS / 2;
-                break;
-            case Algea:
-                y -= GamePieceDetector.ALGEA_RADIUS / 2;
-                break;
+    //     double y = closestGamePieceCam.getRobotToCam().getZ();
+    //     switch(gamePieceType){
+    //         case Coral:
+    //             y -= GamePieceDetector.CORAL_RADIUS / 2;
+    //             break;
+    //         case Algea:
+    //             y -= GamePieceDetector.ALGEA_RADIUS / 2;
+    //             break;
   
-        }
+    //     }
 
-        double alpha = (Math.PI/2 - Math.abs(closestGamePieceCam.getRobotToCam().getRotation().getY())) + Math.toRadians(closestGamePiece.getPitch());
-        double a = y * Math.tan(alpha);
-        SmartDashboard.putNumber("hyp",a);
-        double beta = Math.abs(closestGamePiece.getYaw());
-        double x = a * Math.sin(Math.toRadians(beta));
-        double z = a * Math.cos(Math.toRadians(beta));
-        gamePieceToCam = new Translation3d(z,x,y);
+    //     double alpha = (Math.PI/2 - Math.abs(closestGamePieceCam.getRobotToCam().getRotation().getY())) + Math.toRadians(closestGamePiece.getPitch());
+    //     double a = y * Math.tan(alpha);
+    //     SmartDashboard.putNumber("hyp",a);
+    //     double beta = Math.abs(closestGamePiece.getYaw());
+    //     double x = a * Math.sin(Math.toRadians(beta));
+    //     double z = a * Math.cos(Math.toRadians(beta));
+    //     gamePieceToCam = new Translation3d(z,x,y);
 
-        return gamePieceToCam;
-    }
+    //     return gamePieceToCam;
+    // }
 
-    public static Translation3d VisionCalculateGamePieceTranslation(double centerX, double centerY, double pixelY, double focalY, double focalX, double resX, double resY,
-                                                                    double yFov, GamePieceType gamePieceType){
-        double hieght = 0;
-        switch(gamePieceType){
-            case Coral:
-                hieght = GamePieceDetector.CORAL_RADIUS;
-                break;
-            case Algea:
-                hieght = GamePieceDetector.ALGEA_RADIUS;
-        }
+    public static Translation3d VisionCalculateGamePieceTranslation(double centerX, double centerY, double pixelX, double pixelY,
+                                                                    double resX, double XFov){
 
-        double thetaY = (pixelY / resY) * yFov;
-        double z = (hieght / 2) / (Math.tan(thetaY / 2));
-        double x = ((centerX - (resX / 2)) * z) / focalX;
-        double y = ((centerY - (resY / 2)) * z) / focalY;
+        double plainX = 2.0 * GamePieceDetector.ALGEA_RADIUS / (pixelX / resX);
+        double z = plainX / (2.0 * Math.tan(Math.toRadians(XFov) / 2.0));
+        double x = (centerX - 640 / 2) * plainX / resX;//(2.0 * GamePieceDetector.ALGEA_RADIUS * centerX) / pixelX;
+        double y = (2.0 * GamePieceDetector.ALGEA_RADIUS * (centerY - 480 / 2)) / pixelY;
+
+        SmartDashboard.putNumber("vision - x", x);
+        SmartDashboard.putNumber("vision - y", y);
+        SmartDashboard.putNumber("vision - z", z);
+        SmartDashboard.putNumber("abs", Math.sqrt(Math.pow(x, 2) + 
+                                                      Math.pow(y, 2) + 
+                                                      Math.pow(z, 2)));
 
         return new Translation3d(z, x, y);
     }

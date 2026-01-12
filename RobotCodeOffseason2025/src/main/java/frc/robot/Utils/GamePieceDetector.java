@@ -22,7 +22,7 @@ import frc.robot.Utils.Math.Funcs;
 // test
 public class GamePieceDetector {
     public static final double CORAL_RADIUS = 0.114;
-    public static final double ALGEA_RADIUS = 0.413;
+    public static final double ALGEA_RADIUS = 0.413/2.0;
     private static final GamePieceCamera[] M_CAMS = {
         new GamePieceCamera("Brio_100", GamePieceType.Algea, 
         new Transform3d(new Translation3d(0, 0, 0.765), new Rotation3d(0,-85,0)),
@@ -63,8 +63,7 @@ public class GamePieceDetector {
                                        closestGamePiecesOfWantedType.indexOf(closestGamePiece));
         }
 
-        TargetCorner[] corners = sortCorners(closestGamePiece.getMinAreaRectCorners());
-        //TargetCorner[] corners = Funcs.orgenizeTargets(closestGamePiece.getMinAreaRectCorners());
+        TargetCorner[] corners = Funcs.orgenizeTargets(closestGamePiece.getMinAreaRectCorners());
         SmartDashboard.putString("TL", corners[0].x + "," + corners[0].y);
         SmartDashboard.putString("TR", corners[1].x + "," + corners[1].y);
         SmartDashboard.putString("BR", corners[2].x + "," + corners[2].y);
@@ -81,16 +80,6 @@ public class GamePieceDetector {
         
         return gamePieceToRobot;
         
-    }
-
-    private TargetCorner[] sortCorners(List<TargetCorner> corners){
-        TargetCorner[] cornersArr = new TargetCorner[4];
-        // TL -> TR -> BL -> BR
-        for(TargetCorner corner : corners){
-            
-        }
-        return cornersArr;
-
     }
 
 

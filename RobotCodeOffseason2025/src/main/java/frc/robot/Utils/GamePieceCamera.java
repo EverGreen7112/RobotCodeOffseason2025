@@ -14,11 +14,10 @@ public class GamePieceCamera {
     }
 
     private double m_frameWidth, m_frameHieght;
-    private double m_focalLenghtX, m_focalLenghtY;
     private PhotonCamera m_cam;
     private GamePieceType m_gamePieceType;
     private Transform3d m_robotToCam;
-    private double m_yFov;
+    private double m_xFov;
     public GamePieceCamera(String camName,GamePieceType gamePieceType,Transform3d robotToCam){
         m_cam = new PhotonCamera(camName);
         m_gamePieceType = gamePieceType;
@@ -26,17 +25,14 @@ public class GamePieceCamera {
     }
 
     public GamePieceCamera(String camName, GamePieceType gamePieceType, Transform3d robotToCam,
-                           double focalLenghtX, double focalLenghtY,
-                           double width, double hieght, double yFov)
+                           double width, double hieght, double xFov)
     {
         m_cam = new PhotonCamera(camName);
         m_gamePieceType = gamePieceType;
         m_robotToCam = robotToCam;
-        m_focalLenghtX = focalLenghtX;
-        m_focalLenghtY = focalLenghtY;
         m_frameWidth = width;
         m_frameHieght = hieght;
-        m_yFov = yFov;
+        m_xFov = xFov;
 
     }
 
@@ -56,14 +52,6 @@ public class GamePieceCamera {
         return m_robotToCam;
     }
 
-    public double getFocalX(){
-        return m_focalLenghtX;
-    }
-
-    public double getFocalY(){
-        return m_focalLenghtY;
-    }
-
     public double getWidth(){
         return m_frameWidth;
     }
@@ -72,7 +60,7 @@ public class GamePieceCamera {
         return m_frameHieght;
     }
 
-    public double getYFov(){
-        return m_yFov;
+    public double getXFov(){
+        return m_xFov;
     }
 }
